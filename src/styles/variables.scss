@@ -1,0 +1,35 @@
+// sidebar
+$menuText:#bfcbd9;
+$menuActiveText:#409EFF;
+$subMenuActiveText:#f4f4f5; 
+
+$menuBg:#304156;
+$menuHover:#263445;
+
+$subMenuBg:#1f2d3d;
+$subMenuHover:#001528;
+
+$sideBarWidth: 210px;
+
+// 导航栏颜色定义
+$headerMenuBgc:#F65F10;
+$headerActiveMenuBgc:#e8980f;
+$headerTextColor: #FFF;
+$headerActiveTextColor: #FFF;
+
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+
+
+  hBgc:$headerMenuBgc;
+  hActiveBgc:$headerActiveMenuBgc;
+  hText:$headerTextColor;
+  hActiveText:$headerActiveTextColor;
+}

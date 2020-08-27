@@ -1,0 +1,228 @@
+
+<template>
+  <!-- 招生中/详情 -->
+  <div class="recruitStudentInfo">
+    <div class="content-box">
+      <div class="flsb">
+        <div class="bold">查询条件</div>
+      </div>
+      <el-form :inline="true" :model="searchstudent" size="small" class="demo-form-inline mt15">
+        <el-form-item label="学员姓名">
+          <el-input v-model="searchstudent.name" clearable placeholder="请输入学员姓名" />
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="searchstudent.phone" clearable placeholder="请输入学员手机号" />
+        </el-form-item>
+        <el-form-item label="身份证号">
+          <el-input v-model="searchstudent.card" clearable placeholder="请输入学员身份证号" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" style="width:100px;" round @click="querySearch">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="mt20 content-box">
+      <div class="flsb">
+        <div class="bold">班级/学员列表</div>
+        <div class="fontGay fle">
+          <div v-if="$route.query.type !== 'finish'" class="cursor ml15" @click="addStudent($event)"> 添加学员 </div>
+          <div v-if="$route.query.type !== 'finish'" class="cursor ml15" @click="btnsave($event)"> 模板下载 </div>
+          <div v-if="$route.query.type !== 'finish'" class="cursor ml15" @click="btnsave($event)"> 导入学员 </div>
+          <div class="cursor ml15" @click="btnsave($event)"> 导出学员 </div>
+          <div v-if="$route.query.type !== 'recruitStudent'" class="cursor ml15" @click="btnsave($event)"> 批量打印课时 </div>
+        </div>
+      </div>
+      <tablePug class="mt30" :btns="btn" :lists="lists" :titles="titles" @sendVal="getBtn" />
+      <page :total="total" :page-size="pageSize" @pagesend="getPageData" />
+    </div>
+    <el-dialog
+      :modal-append-to-body="false"
+      :width="looks.title === '添加学员' ? '30%':''"
+      :top="looks.title === '添加学员' ? '15vh':'10vh'"
+      :title="looks.title"
+      :visible.sync="looks.status"
+    >
+      <div v-if="looks.title === '添加学员'">
+        <el-form ref="addForm" :model="student" :rules="rules" size="small">
+          <el-form-item label="学员姓名" prop="name">
+            <el-input v-model="student.name" clearable placeholder="请输入学员姓名" />
+          </el-form-item>
+          <el-form-item label="手机号" prop="phone">
+            <el-input v-model="student.phone" clearable placeholder="请输入学员手机号" />
+          </el-form-item>
+          <el-form-item label="身份证号" prop="card">
+            <el-input v-model="student.card" minlength="15" maxlength="18" show-word-limit clearable placeholder="请输入学员身份证号" />
+          </el-form-item>
+          <el-form-item class="t-c">
+            <el-button type="primary" style="width:200px;" round @click="onSubmit">提交</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+      <studentInfo v-else />
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import classMixin from './../class'
+import studentInfo from '@/components/studentInfo'
+import { phoneValidate, IDcardValidate } from '@/utils/validate'
+export default {
+    name: 'RecruitStudentInfo',
+    components: { studentInfo },
+    mixins: [classMixin],
+    data() {
+        return {
+            titles: [
+                { name: '序号', data: 'orderCode' },
+                { name: '学员姓名', data: 'agentName' },
+                { name: '工种', data: 'total' },
+                { name: '身份证号', data: 'orderCode' },
+                { name: '手机号码', data: 'markCode' },
+                { name: '培训日期', data: 'undertakeTime' },
+                { name: '完成学时', data: 'total' }
+            ],
+            btn: {
+                title: '操作',
+                width: '220',
+                btnlist: [
+                    { con: '打印课时', type: 'warning' },
+                    { con: '查看', type: 'primary' },
+                    { con: '删除', type: 'warning' }
+                ]
+            },
+            looks: {
+                status: false,
+                title: '',
+                datas: {}
+            },
+            searchstudent: {// 搜索条件
+                name: '',
+                phone: '',
+                card: ''
+            },
+            student: {// 提交条件
+                name: '',
+                phone: '',
+                card: ''
+            },
+            rules: {
+                name: [
+                    { required: true, message: '学员姓名不能为空', trigger: 'blur' }
+                ],
+                phone: [
+                    { required: true, message: '联系电话不能为空', trigger: 'blur' },
+                    { min: 11, max: 11, message: '电话长度应为11个字符', trigger: 'blur' },
+                    { validator: phoneValidate, trigger: 'blur' }
+                ],
+                card: [
+                    { required: true, message: '身份证号码不能为空', trigger: 'blur' },
+                    { min: 15, max: 18, message: '身份证号码长度在 15 到 18 个字符', trigger: 'blur' },
+                    { validator: IDcardValidate, trigger: 'blur' }
+                ]
+            }
+        }
+    },
+    created() {
+        const pathType = this.$route.query.type
+        if (pathType === 'recruitStudent') {
+            this.titles = this.titles.filter(e => e.name !== '完成学时')
+            this.$set(this.btn, 'btnlist', [
+                { con: '查看', type: 'primary' },
+                { con: '删除', type: 'warning' }
+            ])
+            this.$set(this.btn, 'width', 120)
+        } else if (pathType === 'learning') {
+            console.log('使用原始配置')
+        } else if (pathType === 'finish') {
+            this.$set(this.btn, 'width', 150)
+            this.$set(this.btn, 'btnlist', [
+                { con: '打印课时', type: 'warning' },
+                { con: '查看', type: 'primary' }
+            ])
+        } else {
+            // this.$router.push('/404')
+        }
+    },
+    methods: {
+        btnsave(e) {
+            this.$message(e.target.innerText)
+        },
+        getBtn(v) {
+            if (v.type === '查看') {
+                this.looks = {
+                    status: true,
+                    title: '详情',
+                    datas: {}
+                }
+                return
+            }
+            if (v.type === '删除') {
+                this.$confirm('是否在当前班级删除该学员?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.$message('删除---待处理逻辑')
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    })
+                })
+                return
+            }
+            if (v.type === '打印课时') {
+                this.$message('打印课时---待处理')
+            }
+        },
+        querySearch() {
+            console.log('查询', this.searchStudent)
+        },
+        onSubmit() {
+            console.log('提交', this.student)
+        },
+        addStudent(e) { // 添加学员
+            this.student = {// 重置提交条件
+                name: '',
+                phone: '',
+                card: ''
+            }
+            this.looks = {
+                status: true,
+                title: e.target.innerText,
+                datas: {}
+            }
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+.recruitStudentInfo{
+    .lookTable{
+        border-top: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        .lookItem{
+            >div{
+                border-left: 1px solid #ccc;
+                border-bottom: 1px solid #ccc;
+                width: calc(100% / 4);
+                padding: 0 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 50px;
+                line-height: 20px;
+                overflow: hidden;
+                &:nth-child(odd){
+                    // justify-content: flex-end;
+                    font-weight: 600;
+                }
+            }
+            .progress{
+                width: 75%;
+            }
+        }
+    }
+}
+</style>

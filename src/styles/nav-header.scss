@@ -1,0 +1,89 @@
+#app{
+    .nav-header-fixed{//关于固定导航栏样式配置
+      background-color: $headerMenuBgc;
+    }
+    .nav-header-container {//关于点击导航样式配置 
+        $nav-height:36px;
+        height: $nav-height; 
+        overflow: hidden;
+        .nav-header{
+            background: $headerMenuBgc;  
+            height: $nav-height;  
+            display: flex; 
+            text-align: center; 
+        } 
+        .el-menu-item, .el-submenu__title{
+            height: $nav-height;
+            line-height: $nav-height; 
+        }
+
+        .el-menu-item, .el-submenu__title i{
+            color: #FFF;
+        }
+        // 鼠标滑过样式
+        .submenu-title-noDropdown,
+        .el-submenu__title {
+          &:hover {
+            background-color: $headerActiveMenuBgc !important;
+          }
+        }
+        
+        .is-active{
+            background-color: $headerActiveMenuBgc !important;;
+        }
+        .el-menu.el-menu--horizontal{//如果需要定义下划线则开启
+            // border: solid 1px #e6e6e6;
+            border: 0;
+        }
+        .is-active>.el-submenu__title {
+          color: #000 !important;
+        } 
+        & .nest-menu .el-submenu>.el-submenu__title,
+        & .el-submenu .el-menu-item {
+          min-width: $sideBarWidth !important;
+          background-color: $subMenuBg !important;
+    
+          &:hover {
+            background-color: $subMenuHover !important;
+          }
+        }
+    }
+}
+// 下拉框垂直方向样式
+.el-menu--horizontal {
+    &>.el-menu {
+      .svg-icon {
+        margin-right: 16px;
+      }
+    }
+  
+    .nest-menu .el-submenu>.el-submenu__title,
+    .el-menu-item {
+      &:hover { 
+        background-color: $headerActiveMenuBgc !important;
+      }
+    }
+  
+    // 子菜单太长时，出现滚动条
+    >.el-menu--popup {
+      width: 256px;
+      max-height: 100vh;
+      overflow-y: auto;
+  
+      &::-webkit-scrollbar-track-piece {
+        background: #d3dce6;
+      }
+  
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+  
+      &::-webkit-scrollbar-thumb {
+        background: #99a9bf;
+        border-radius: 20px;
+      }
+    } 
+    .nest-menu {
+        width: 100% !important;
+    }
+  }
