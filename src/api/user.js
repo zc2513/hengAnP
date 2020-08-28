@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
     return request({
-        url: '/index.php',
+        url: '/index.php/Master/Login/login',
         method: 'post',
         data
     })
