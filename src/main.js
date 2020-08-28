@@ -18,10 +18,10 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // 权限
 
-import { mockXHR } from '../mock'
-if (process.env.NODE_ENV === 'development') {
-    mockXHR()
-}
+// import { mockXHR } from '../mock'
+// if (process.env.NODE_ENV === 'development') {
+//     mockXHR()
+// }
 
 Vue.use(ElementUI, { locale })
 

@@ -25,12 +25,19 @@ module.exports = {
         },
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                target: `http://127.0.0.1:${port}/mock`,
+                target: 'http://w.safetymf.com',
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''
                 }
             }
+            // [process.env.VUE_APP_BASE_API]: {
+            //     target: `http://127.0.0.1:${port}/mock`,
+            //     changeOrigin: true,
+            //     pathRewrite: {
+            //         ['^' + process.env.VUE_APP_BASE_API]: ''
+            //     }
+            // }
         },
         after: require('./mock/mock-server.js')
     },
