@@ -5,12 +5,12 @@
       <breadcrumb />
     </div>
 
-    <div class="fl1 flcc nav-title">学而思教育培训机构</div>
+    <div class="fl1 flcc nav-title">{{ jgname || '未获取到机构名称' }}</div>
 
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="avatar || 'https://dss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3299349948,2200749940&fm=26&gp=0.jpg'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -49,7 +49,8 @@ export default {
     computed: {
         ...mapGetters([
             'sidebar',
-            'avatar'
+            'avatar',
+            'jgname'
         ])
     },
     methods: {

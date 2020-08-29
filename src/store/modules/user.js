@@ -4,8 +4,9 @@ import { resetRouter } from '@/router'
 
 const state = {
     token: getToken(),
+    jgname: '',
     name: '',
-    avatar: ''
+    logo: ''
 }
 
 const mutations = {
@@ -15,11 +16,11 @@ const mutations = {
     SET_NAME: (state, name) => {
         state.name = name
     },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
+    SET_JGNAME: (state, jgname) => {
+        state.jgname = jgname
     },
-    SET_ROLES: (state, roles) => {
-        state.roles = roles
+    SET_LOG: (state, logo) => {
+        state.logo = logo
     }
 }
 
@@ -30,8 +31,8 @@ const actions = {
         return new Promise((resolve, reject) => {
             login({ username: username.trim(), password: password }).then(response => {
                 const { data } = response
-                commit('SET_TOKEN', data.token)
-                setToken(data.token)
+                commit('SET_TOKEN', data.diy_id)
+                setToken(data.diy_id)
                 resolve()
             }).catch(error => {
                 reject(error)
@@ -44,19 +45,18 @@ const actions = {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
                 const { data } = response
-
                 if (!data) {
                     reject('获取用户信息失败，请重新登录')
                 }
 
-                const { name, avatar, roles } = data
-                if (!roles || roles.length <= 0) {
-                    reject('未找到角色字段，角色字段必须是非空数组!')
+                const { companyname, loginname, logo } = data
+                if (!companyname) {
+                    reject('未找到机构名称，机构名称不能为空!')
                 }
 
-                commit('SET_ROLES', roles)
-                commit('SET_NAME', name)
-                commit('SET_AVATAR', avatar)
+                commit('SET_JGNAME', companyname)
+                commit('SET_NAME', loginname)
+                commit('SET_LOG', logo)
                 resolve(data)
             }).catch(error => {
                 reject(error)
@@ -68,7 +68,9 @@ const actions = {
     logout({ commit, state, dispatch }) {
         return new Promise((resolve, reject) => {
             logout(state.token).then(() => {
-                commit('SET_TOKEN', '')
+                commit('SET_JGNAME', '')
+                commit('SET_NAME', '')
+                commit('SET_LOG', '')
                 removeToken()
                 resetRouter()
                 // 重置已访问的视图和缓存的视图
