@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import qs from 'qs'
+import qs from 'qs'
 // $pageNum = I('pageNum ');
 // $pageSize = I('pageSize');
 // $data['id'] = I('id');                  修改需要传id
@@ -21,50 +21,49 @@ import qs from 'qs'
 // $where['type4_id'] = I('type4_id');
 // $where['type5_id'] = I('type5_id');
 // $where['type6_id'] = I('type6_id');
-//新增班级
-export function login(data) {
-    return request({
-        url: '/index.php/Master/Class/addclass',
-        method: 'post',
-        data: qs.stringify(data)
-    })
+// 新增班级
+export function login(data) {
+    return request({
+        url: '/index.php/Master/Class/addclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
 }
 
-//查询班级
-export function selectclass(data) {
-        return request({
-            url: '/index.php/Master/Class/selectclass',
-            method: 'post',
-            data: qs.stringify(data)
-        })
-    }
+// 查询班级
+export function selectclass(data) {
+    return request({
+        url: '/index.php/Master/Class/selectclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
 
-    //更新新班级信息
-export function updateclass(data) {
-        return request({
-            url: '/index.php/Master/Class/updateclass',
-            method: 'post',
-            data: qs.stringify(data)
-        })
-    }
+// 更新新班级信息
+export function updateclass(data) {
+    return request({
+        url: '/index.php/Master/Class/updateclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
 
-//删除班级
-export function detailscalss(data) {
-        return request({
-            url: '/index.php/Master/Class/detailscalss',
-            method: 'post',
-            data: qs.stringify(data)
-        })
-    }
+// 删除班级
+export function detailscalss(data) {
+    return request({
+        url: '/index.php/Master/Class/detailscalss',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
 
+// http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
 
-    // http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
-
-//二维码
-export function Qrcode(data) {
-        return request({
-            url: '/index.php/Master/Qrcode/index',
-            method: 'get',
-            params
-        })
-    }
+// 二维码
+export function Qrcode(params) {
+    return request({
+        url: '/index.php/Master/Qrcode/index',
+        method: 'get',
+        params
+    })
+}
