@@ -1,7 +1,7 @@
 <template>
   <el-form :inline="true" :model="formData" size="small" class="demo-form-inline mt15">
     <el-form-item label="班级名称">
-      <el-input v-model="formData.name" clearable placeholder="班级名称" />
+      <el-input v-model="formData.classname" clearable placeholder="班级名称" />
     </el-form-item>
     <el-form-item label="带班老师">
       <el-input v-model="formData.teacher" clearable placeholder="带班老师" />
@@ -14,7 +14,7 @@
         unlink-panels
         value-format="timestamp"
         range-separator="至"
-        start-placeholder="开班日期"
+        start-placeholder="开始日期"
         end-placeholder="结束日期"
         :picker-options="pickerOptions"
         @change="changeDate"
@@ -31,10 +31,10 @@ export default {
     data() {
         return {
             formData: {
-                name: '',
+                classname: '',
                 teacher: '',
-                startTime: '',
-                endTime: ''
+                startclass: '',
+                endclass: ''
             },
             times: '',
             pickerOptions: {
@@ -71,8 +71,8 @@ export default {
             this.$emit('search', this.formData)
         },
         changeDate(time) {
-            this.formData.startTime = time ? time[0] : ''
-            this.formData.endTime = time ? time[1] : ''
+            this.formData.startclass = time ? time[0] : ''
+            this.formData.endclass = time ? time[1] : ''
         }
     }
 }

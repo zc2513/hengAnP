@@ -27,7 +27,7 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     response => {
         const res = response.data
-        console.log(res)
+        console.log(response)
         if (res.code !== 200) {
             if (res.status !== 'ok') {
                 Message({

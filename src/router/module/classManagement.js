@@ -21,7 +21,7 @@ const classManagement = {
             name: 'createClass',
             hidden: true,
             component: () => import('@/views/class/recruitStudent/createClass'),
-            meta: { title: '创建班级' }
+            meta: { title: '创建班级', 'activeMenu': '/class/recruitStudent' }
         },
         {
             path: 'recruitStudent/info',

@@ -6,6 +6,7 @@
       :page-sizes="[8,10, 20,30]"
       layout="total ,sizes,prev, pager, next, jumper"
       :total="total"
+      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
   </div>
@@ -31,6 +32,9 @@ export default {
     methods: {
         handleCurrentChange(val) {
             this.$emit('pagesend', val)
+        },
+        handleSizeChange(val) {
+            this.$emit('pagesizes', val)
         }
     }
 }

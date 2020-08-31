@@ -16,7 +16,12 @@
         </div>
       </div>
       <tablePug class="mt15" :btns="btn" :lists="lists" :titles="titles" @sendVal="getBtn" />
-      <page :total="total" :page-size="pageSize" @pagesend="getPageData" />
+      <page
+        :total="total"
+        :page-size="searchData.size"
+        @pagesend="getPageData"
+        @pagesizes="pagesizes"
+      />
       <el-dialog
         :modal-append-to-bod="false"
         :show-close="false"
@@ -25,7 +30,7 @@
         top="30vh"
         :visible.sync="qrCodesType"
       >
-        <div class="qrCodeImg">
+        <div v-loading="imgLoading" element-loading-text="加载中..." class="qrCodeImg">
           <i slot="title" class="el-icon-error cursor" @click="qrCodesType = false;qrCodeSrc=''" />
           <img :src="qrCodeSrc">
         </div>
@@ -36,13 +41,15 @@
 
 <script>
 import classMixin from './../class'
-import { selectclass } from '@/api/class'
+// eslint-disable-next-line no-unused-vars
+import { selectclass, detailscalss, Qrcode } from '@/api/class'
 export default {
     name: 'RecruitStudent',
     mixins: [classMixin],
     data() {
         return {
             qrCodesType: false,
+            imgLoading: true,
             qrCodeSrc: '',
             btn: {
                 title: '操作',
@@ -54,38 +61,52 @@ export default {
                     { con: '二维码', type: 'primary', plain: true }
                 ]
             }
+
         }
     },
     created() {
         this.titles = this.titles.filter(e => e.name !== '进度')
-        this.init()
     },
     methods: {
-        init(status = '0') {
-            // pageNum: 10,
-            //     pageSize: 1,
-            const data = {
-                manager_id: this.$store.getters.token,
-                status
-            }
-            selectclass(data).then(res => {
-                console.log(res, 4444)
-                this.lists = res.data
-            })
-        },
+        // init(params) {
+        //     selectclass(params).then(res => {
+        //         console.log(res, 4444)
+        //         // const { data } = res
+        //         // this.total = data.count
+        //         // for (const item of data.data) {
+        //         //     item.startclass = this.$parseTime(item.startclass)
+        //         //     item.endclass = this.$parseTime(item.endclass)
+        //         // }
+        //         // this.lists = data.data
+        //     })
+        // },
         getBtn(v) {
-            if (v.type === '编辑') {
-                return this.$router.push('/class/createClass?type=edit')
+            const { type, data } = v
+            if (type === '编辑') {
+                const query = {
+                    type: 'edit',
+                    id: data.classid
+                }
+                this.$router.push({
+                    path: '/class/createClass',
+                    query
+                })
+                return
             }
-            if (v.type === '详情') {
+            if (type === '详情') {
                 return this.$router.push('/class/recruitStudent/info?type=recruitStudent')
             }
-            if (v.type === '解散') {
-                return this.$message(v.type)
+            if (type === '解散') {
+                return this.$message(type)
             }
-            if (v.type === '二维码') {
+            if (type === '二维码') {
                 this.qrCodesType = true
-                this.qrCodeSrc = require('@/assets/qrcode.png')
+                Qrcode({ manager_id: this.$store.getters.token, classid: data.classid }).then(res => {
+                    this.imgLoading = false
+                    this.qrCodeSrc = window.URL.createObjectURL(res.data)
+                }).catch(() => {
+                    this.qrCodesType = false
+                })
             }
         }
     }

@@ -71,6 +71,7 @@ export function getKnotList(data) {
     return request({
         url: '/index.php/Master/Course/selectcourse',
         method: 'post',
+        responseType: 'blob',
         data: qs.stringify(data)
     })
 }
@@ -82,7 +83,8 @@ export function Qrcode(params) {
     return request({
         url: '/index.php/Master/Qrcode/index',
         method: 'get',
-        params
+        params,
+        responseType: 'blob'
     })
 }
 
