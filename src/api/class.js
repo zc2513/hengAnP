@@ -76,15 +76,6 @@ export function getKnotList(data) {
     })
 }
 
-// http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
-
 // 二维码
-export function Qrcode(params) {
-    return request({
-        url: '/index.php/Master/Qrcode/index',
-        method: 'get',
-        params,
-        responseType: 'blob'
-    })
-}
+// http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
 
