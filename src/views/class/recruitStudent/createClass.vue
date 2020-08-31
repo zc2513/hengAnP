@@ -163,7 +163,7 @@
 <script>
 import { phoneValidate } from '@/utils/validate'
 // eslint-disable-next-line no-unused-vars
-import { addclass, chapterlist, getKnotList, updateclass } from '@/api/class'
+import { addclass, chapterlist, getKnotList, detailsclass, updateclass } from '@/api/class'
 import { getIndustryType } from '@/api/dic'
 export default {
     data() {
@@ -234,7 +234,9 @@ export default {
         }
     },
     created() {
-
+        if (this.$route.query.type === 'edit' && this.$route.query.id) {
+            this.init(this.$route.query.id)
+        }
     },
     mounted() {
         // for (const item of this.tableData) { // 默认全选
@@ -242,8 +244,10 @@ export default {
         // }
     },
     methods: {
-        init() {
-
+        init(id) {
+            detailsclass({ classid: id }).then(res => {
+                console.log('info', res)
+            })
         },
         lazyLoad(node, resolve) { // 行业分类 加载项
             const { level } = node

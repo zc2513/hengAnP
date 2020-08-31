@@ -21,37 +21,11 @@ import qs from 'qs'
 // $where['type4_id'] = I('type4_id');
 // $where['type5_id'] = I('type5_id');
 // $where['type6_id'] = I('type6_id');
-// 新增班级
-export function addclass(data) {
-    return request({
-        url: '/index.php/Master/Class/addclass',
-        method: 'post',
-        data: qs.stringify(data)
-    })
-}
 
 // 查询班级
 export function selectclass(data) {
     return request({
         url: '/index.php/Master/Class/selectclass',
-        method: 'post',
-        data: qs.stringify(data)
-    })
-}
-
-// 更新新班级信息
-export function updateclass(data) {
-    return request({
-        url: '/index.php/Master/Class/updateclass',
-        method: 'post',
-        data: qs.stringify(data)
-    })
-}
-
-// 删除班级
-export function detailscalss(data) {
-    return request({
-        url: '/index.php/Master/Class/detailscalss',
         method: 'post',
         data: qs.stringify(data)
     })
@@ -70,6 +44,42 @@ export function chapterlist(data) {
 export function getKnotList(data) {
     return request({
         url: '/index.php/Master/Course/selectcourse',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+// 新增班级
+export function addclass(data) {
+    return request({
+        url: '/index.php/Master/Class/addclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+// 获取班级详情修改
+export function detailsclass(data) {
+    return request({
+        url: '/index.php/Master/Class/detailsclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+// 更新新班级信息
+export function updateclass(data) {
+    return request({
+        url: '/index.php/Master/Class/updateclass',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+// 删除班级
+export function delclass(data) {
+    return request({
+        url: '/index.php/Master/Class/delclass',
         method: 'post',
         data: qs.stringify(data)
     })
