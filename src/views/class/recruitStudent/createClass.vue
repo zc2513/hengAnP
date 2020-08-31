@@ -67,6 +67,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :picker-options="pickerOptions0"
                 @change="changeDate"
               />
             </el-form-item>
@@ -162,11 +163,16 @@
 <script>
 import { phoneValidate } from '@/utils/validate'
 // eslint-disable-next-line no-unused-vars
-import { addclass, chapterlist, getKnotList, updateclass } from '@/api/class'
+import { addclass, chapterlist, getKnotList, detailsclass, updateclass } from '@/api/class'
 import { getIndustryType } from '@/api/dic'
 export default {
     data() {
         return {
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7// 如果没有后面的-8.64e7就是不可以选择今天的
+                }
+            },
             isChapter: false, // 获取章
             isChildren: false, // 获取节
             isSub: false, // 是否提交
@@ -228,7 +234,9 @@ export default {
         }
     },
     created() {
-
+        if (this.$route.query.type === 'edit' && this.$route.query.id) {
+            this.init(this.$route.query.id)
+        }
     },
     mounted() {
         // for (const item of this.tableData) { // 默认全选
@@ -236,8 +244,10 @@ export default {
         // }
     },
     methods: {
-        init() {
-
+        init(id) {
+            detailsclass({ id }).then(res => {
+                console.log('info', res)
+            })
         },
         lazyLoad(node, resolve) { // 行业分类 加载项
             const { level } = node
@@ -321,16 +331,17 @@ export default {
             if (expandedRows.length) {
                 const { id } = row
                 this.isChildren = true
-                getKnotList({ id }).then(res => {
-                    for (const item of this.chapters) {
-                        if (item.id === id) {
+                for (const item of this.chapters) {
+                    if (item.id === id) {
+                        getKnotList({ id }).then(res => {
+                            console.log(res, 444444)
                             item['children'] = res.data
-                        }
+                            this.isChildren = false
+                        }).catch(() => {
+                            this.isChildren = false
+                        })
                     }
-                    this.isChildren = false
-                }).catch(() => {
-                    this.isChildren = false
-                })
+                }
             }
         }
     }

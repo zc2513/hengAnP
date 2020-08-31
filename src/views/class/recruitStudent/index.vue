@@ -29,10 +29,11 @@
         destroy-on-close
         top="30vh"
         :visible.sync="qrCodesType"
+        :before-close="handleCloseImg"
       >
         <div v-loading="imgLoading" element-loading-text="加载中..." class="qrCodeImg">
           <i slot="title" class="el-icon-error cursor" @click="qrCodesType = false;qrCodeSrc=''" />
-          <img :src="qrCodeSrc">
+          <img :src="qrCodeSrc" @load="imgLoading=false">
         </div>
       </el-dialog>
     </div>
@@ -68,24 +69,12 @@ export default {
         this.titles = this.titles.filter(e => e.name !== '进度')
     },
     methods: {
-        // init(params) {
-        //     selectclass(params).then(res => {
-        //         console.log(res, 4444)
-        //         // const { data } = res
-        //         // this.total = data.count
-        //         // for (const item of data.data) {
-        //         //     item.startclass = this.$parseTime(item.startclass)
-        //         //     item.endclass = this.$parseTime(item.endclass)
-        //         // }
-        //         // this.lists = data.data
-        //     })
-        // },
         getBtn(v) {
             const { type, data } = v
             if (type === '编辑') {
                 const query = {
                     type: 'edit',
-                    id: data.classid
+                    id: data.id
                 }
                 this.$router.push({
                     path: '/class/createClass',
@@ -101,13 +90,13 @@ export default {
             }
             if (type === '二维码') {
                 this.qrCodesType = true
-                Qrcode({ manager_id: this.$store.getters.token, classid: data.classid }).then(res => {
-                    this.imgLoading = false
-                    this.qrCodeSrc = window.URL.createObjectURL(res.data)
-                }).catch(() => {
-                    this.qrCodesType = false
-                })
+                this.qrCodeSrc = `${process.env.VUE_APP_BASE_API}/index.php/Master/Qrcode/index?classid=${data.classid}&id=${this.$store.getters.token}`
             }
+        },
+        handleCloseImg(done) {
+            this.qrCodeSrc = ''
+            this.imgLoading = true
+            done()
         }
     }
 }
