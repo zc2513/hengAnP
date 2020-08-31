@@ -29,8 +29,7 @@ const actions = {
     login({ commit }, userInfo) {
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
-            login({ username: username.trim(), password: password }).then(response => {
-                const { data } = response
+            login({ username: username.trim(), password: password }).then(data => {
                 commit('SET_TOKEN', data.diy_id)
                 setToken(data.diy_id)
                 resolve()
@@ -44,12 +43,11 @@ const actions = {
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
-                const { data } = response
-                if (!data) {
+                if (!response) {
                     reject('获取用户信息失败，请重新登录')
                 }
 
-                const { companyname, loginname, logo } = data
+                const { companyname, loginname, logo } = response
                 if (!companyname) {
                     reject('未找到机构名称，机构名称不能为空!')
                 }
@@ -57,7 +55,7 @@ const actions = {
                 commit('SET_JGNAME', companyname)
                 commit('SET_NAME', loginname)
                 commit('SET_LOG', logo)
-                resolve(data)
+                resolve(response)
             }).catch(error => {
                 reject(error)
             })

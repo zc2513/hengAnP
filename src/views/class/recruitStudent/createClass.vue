@@ -1,6 +1,6 @@
 <template>
+  <!-- 创建班级 -->
   <div class="create-box">
-    创建班级
     <div class="content-box">
       <div class="flsb">
         <div class="bold">完善您的班级信息</div>
@@ -17,8 +17,8 @@
       >
         <el-row>
           <el-col class="mb10" :span="12">
-            <el-form-item label="班级名称" prop="className">
-              <el-input v-model="formData.className" clearable placeholder="请输入班级名称：工种类型+取证/复审/换证+期号" />
+            <el-form-item label="班级名称" prop="classname">
+              <el-input v-model="formData.classname" clearable placeholder="请输入班级名称：工种类型+取证/复审/换证+期号" />
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
@@ -27,8 +27,8 @@
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="授课方式" prop="applyType">
-              <el-select v-model="formData.applyType" placeholder="请选择">
+            <el-form-item label="授课方式" prop="way">
+              <el-select v-model="formData.way" placeholder="请选择">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -39,29 +39,27 @@
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="行业" prop="industry">
-              <el-select v-model="formData.industry" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                />
-              </el-select>
+            <el-form-item label="行业" prop="types">
+              <el-cascader
+                v-model="formData.types"
+                placeholder="请选择"
+                :props="{lazy:true,lazyLoad}"
+                @change="getChapterList"
+              />
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="formData.phone" maxlength="11" show-word-limit clearable placeholder="请输入联系电话" />
+            <el-form-item label="手机号码" prop="classipone">
+              <el-input v-model="formData.classipone" maxlength="11" show-word-limit clearable placeholder="请输入联系电话" />
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="报名人数" prop="peopleNum">
-              <el-input v-model="formData.peopleNum" maxlength="3" clearable placeholder="请输入报名人数" />
+            <el-form-item label="报名人数" prop="classnum">
+              <el-input v-model="formData.classnum" maxlength="3" clearable placeholder="请输入报名人数" />
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="开学日期" prop="startTime">
+            <el-form-item label="开学日期" prop="startclass">
               <el-date-picker
                 v-model="times"
                 type="daterange"
@@ -73,18 +71,13 @@
               />
             </el-form-item>
           </el-col>
-          <!-- <el-col class="mb10" :span="12">
-            <el-form-item label="结束时间" prop="endTime">
-              <el-input v-model="formData.endTime" clearable placeholder="请选择结束时间" />
-            </el-form-item>
-          </el-col> -->
         </el-row>
         <div class="mt20">
-          <div class="bold">已选课时（24）</div>
+          <div class="bold">已选课时（{{ chapters.length }}）</div>
           <div class="table-list">
             <el-table
               ref="refTable"
-              :data="tableData"
+              :data="chapters"
               align="center"
               @expand-change="expandChange"
               @selection-change="handleSelectionChange"
@@ -118,11 +111,19 @@
                   </el-table>
                 </template>
               </el-table-column>
-              <el-table-column prop="date" label="章节" />
-              <el-table-column prop="name" label="名称" />
-              <el-table-column prop="time" label="学时" />
+              <el-table-column prop="date" label="章节">
+                <template slot-scope="{$index}">
+                  章{{ $index+1 }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="chapter_title" label="名称" />
+              <el-table-column prop="hours" label="学时" />
               <el-table-column prop="type" label="类型" />
-              <el-table-column prop="hz" label="初训/复审换证" />
+              <el-table-column prop="hz" label="初训/复审换证">
+                <template>
+                  初训/复审
+                </template>
+              </el-table-column>
               <el-table-column prop="teacher" label="讲师" />
               <!-- <el-table-column label="操作" width="50">
                 <template slot-scope="{row}">
@@ -149,6 +150,9 @@
 
 <script>
 import { phoneValidate } from '@/utils/validate'
+// eslint-disable-next-line no-unused-vars
+import { addclass, chapterlist } from '@/api/class'
+import { getIndustryType } from '@/api/dic'
 export default {
     data() {
         return {
@@ -158,63 +162,54 @@ export default {
                 src: ''
             },
             formData: {
-                className: '',
-                teacher: '',
-                applyType: '网授',
-                industry: '',
-                phone: '',
-                peopleNum: '',
-                startTime: '',
-                endTime: '',
-                selectionTable: []
+                classname: '', // 班级名称
+                teacher: '', // 代课老师
+                way: '网授', // 授课方式
+                types: [], // 行业选择
+                classipone: '', // 班主任手机号
+                classnum: '', // 报名人数
+                startclass: '', // 开始时间
+                endclass: '', // 结束时间
+                course: '', // 已选课程
+                selectionTable: []// 已选课程
             },
             rules: {
-                className: [
+                classname: [
                     { required: true, message: '请输入班级名称', trigger: 'blur' }
                 ],
                 teacher: [
                     { required: true, message: '请输入代课老师名称', trigger: 'blur' },
                     { min: 2, max: 8, message: '姓名长度在 2 到 8 个字符', trigger: 'blur' }
                 ],
-                applyType: [
+                way: [
                     { required: true, message: '请选择报名方式', trigger: ['blur', 'change'] }
                 ],
-                industry: [
+                types: [
                     { required: true, message: '请输选择行业类别', trigger: ['blur', 'change'] }
                 ],
-                phone: [
+                classipone: [
                     { required: true, message: '联系电话不能为空', trigger: 'blur' },
                     { min: 11, max: 11, message: '电话长度应为11个字符', trigger: 'blur' },
                     { validator: phoneValidate, trigger: 'blur' }
                 ],
-                peopleNum: [
+                classnum: [
                     { required: true, message: '请输入报名人数', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    { min: 1, max: 3, message: '长度在 1 到 3 个字符', trigger: 'blur' }
                 ],
-                startTime: [
-                    { required: true, message: '请选择开始时间', trigger: 'blur' }
-                ],
-                endTime: [
-                    { required: true, message: '选择结束时间', trigger: 'blur' }
+                startclass: [
+                    { required: true, message: '请选择开始时间与结束时间', trigger: ['change', 'blur'] }
                 ]
             },
             times: '',
-            options: [{
-                value: '选项1',
-                label: '黄金糕'
-            }, {
-                value: '选项2',
-                label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
-            }],
+            options: [
+                {
+                    value: '网授',
+                    label: '网授'
+                }, {
+                    value: '面授',
+                    label: '面授'
+                }
+            ],
             tableData: [
                 {
                     id: 1,
@@ -284,8 +279,12 @@ export default {
                     type: '电弧焊',
                     hz: '初训/复审'
                 }
-            ]
+            ],
+            chapters: []// 章节列表
         }
+    },
+    created() {
+
     },
     mounted() {
         for (const item of this.tableData) { // 默认全选
@@ -293,7 +292,31 @@ export default {
         }
     },
     methods: {
+        init() {
+
+        },
+        lazyLoad(node, resolve) {
+            const { level } = node
+            const url = level + 1
+            const params = {}
+            if (level) { params['id'] = node.value }
+            let nodes = []
+            getIndustryType(params, url).then(res => {
+                console.log(res, 4444)
+                nodes = res.map(item => {
+                    return {
+                        value: item.id,
+                        label: item.name,
+                        leaf: !item.status
+                    }
+                })
+                resolve(nodes)
+            }).catch(() => {
+                resolve(nodes)
+            })
+        },
         onSubmit() {
+            console.log(this.formData, 111)
             this.$refs.formName.validate((valid) => {
                 if (valid) {
                     alert('submit!')
@@ -328,57 +351,73 @@ export default {
             this.formData.selectionTable = row
         },
         changeDate(time) {
-            this.formData.startTime = time ? time[0] : ''
-            this.formData.endTime = time ? time[1] : ''
+            this.formData.startclass = time ? time[0] : ''
+            this.formData.endclass = time ? time[1] : ''
+        },
+        getChapterList() {
+            if (this.formData.types.length) {
+                chapterlist({ types: this.formData.types }).then(res => {
+                    console.log('章', res)
+                    this.chapters = res
+                    this.$nextTick(() => {
+                        for (const item of res) { // 默认全选
+                            this.$refs.refTable.toggleRowSelection(item)
+                        }
+                    })
+                }).catch(() => {
+                    this.chapters = []
+                })
+            } else {
+                this.chapters = []
+            }
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.create-box{
-    /deep/.el-row{
-        .el-form-item{
-            display: flex;
-            .el-form-item__content{
-                width: calc(100% - 120px);
-                max-width: 380px;
-            }
-            label{
-                color: rgba(153,153,153,1);
-            }
-        }
-        >div:nth-child(odd){
+    .create-box{
+        /deep/.el-row{
             .el-form-item{
-                justify-content: flex-end;
-                padding-right: 40px;
+                display: flex;
+                .el-form-item__content{
+                    width: calc(100% - 120px);
+                    max-width: 380px;
+                }
+                label{
+                    color: rgba(153,153,153,1);
+                }
+            }
+            >div:nth-child(odd){
+                .el-form-item{
+                    justify-content: flex-end;
+                    padding-right: 40px;
+                }
+            }
+            >div:nth-child(even){
+                .el-form-item{
+                    padding-left: 40px;
+                }
+            }
+            .el-select,.el-cascader{
+                width: 100%;
             }
         }
-        >div:nth-child(even){
-            .el-form-item{
-                padding-left: 40px;
-            }
-        }
-        .el-select{
+        /deep/.el-date-editor{
             width: 100%;
         }
+        /deep/.el-table__expanded-cell[class*=cell]{
+            padding: 0;
+        }
+        /deep/.el-dialog__body{
+            padding: 0 !important;
+        }
+        /deep/.expand-column-cls{//展开列
+            // display: none;
+        }
+        video{
+            width: 100%;
+            max-height: 400px;
+        }
     }
-    /deep/.el-date-editor{
-        width: 100%;
-    }
-    /deep/.el-table__expanded-cell[class*=cell]{
-        padding: 0;
-    }
-    /deep/.el-dialog__body{
-        padding: 0 !important;
-    }
-    /deep/.expand-column-cls{//展开列
-        // display: none;
-    }
-    video{
-        width: 100%;
-        max-height: 400px;
-    }
-}
-
 </style>

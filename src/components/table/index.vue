@@ -5,7 +5,6 @@
       ref="multipleTable"
       v-loading="isloading"
       stripe
-      size="medium"
       :data="lists"
       :border="border"
       highlight-current-row

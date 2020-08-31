@@ -22,7 +22,7 @@ import qs from 'qs'
 // $where['type5_id'] = I('type5_id');
 // $where['type6_id'] = I('type6_id');
 // 新增班级
-export function login(data) {
+export function addclass(data) {
     return request({
         url: '/index.php/Master/Class/addclass',
         method: 'post',
@@ -57,6 +57,15 @@ export function detailscalss(data) {
     })
 }
 
+// 获取章节列表
+export function chapterlist(data) {
+    return request({
+        url: '/index.php/Master/Chapter/addchapterlist',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
 // http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
 
 // 二维码
@@ -67,3 +76,4 @@ export function Qrcode(params) {
         params
     })
 }
+
