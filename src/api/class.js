@@ -57,10 +57,19 @@ export function detailscalss(data) {
     })
 }
 
-// 获取章节列表
+// 获取章列表
 export function chapterlist(data) {
     return request({
         url: '/index.php/Master/Chapter/addchapterlist',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
+// 获取节列表
+export function getKnotList(data) {
+    return request({
+        url: '/index.php/Master/Course/selectcourse',
         method: 'post',
         data: qs.stringify(data)
     })

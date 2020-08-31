@@ -29,7 +29,8 @@ const actions = {
     login({ commit }, userInfo) {
         const { username, password } = userInfo
         return new Promise((resolve, reject) => {
-            login({ username: username.trim(), password: password }).then(data => {
+            login({ username: username.trim(), password: password }).then(response => {
+                const { data } = response
                 commit('SET_TOKEN', data.diy_id)
                 setToken(data.diy_id)
                 resolve()
@@ -43,11 +44,12 @@ const actions = {
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {
             getInfo(state.token).then(response => {
-                if (!response) {
+                const { data } = response
+                if (!data) {
                     reject('获取用户信息失败，请重新登录')
                 }
 
-                const { companyname, loginname, logo } = response
+                const { companyname, loginname, logo } = data
                 if (!companyname) {
                     reject('未找到机构名称，机构名称不能为空!')
                 }

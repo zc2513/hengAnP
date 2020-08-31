@@ -36,6 +36,7 @@
 
 <script>
 import classMixin from './../class'
+import { selectclass } from '@/api/class'
 export default {
     name: 'RecruitStudent',
     mixins: [classMixin],
@@ -57,8 +58,21 @@ export default {
     },
     created() {
         this.titles = this.titles.filter(e => e.name !== '进度')
+        this.init()
     },
     methods: {
+        init(status = '0') {
+            // pageNum: 10,
+            //     pageSize: 1,
+            const data = {
+                manager_id: this.$store.getters.token,
+                status
+            }
+            selectclass(data).then(res => {
+                console.log(res, 4444)
+                this.lists = res.data
+            })
+        },
         getBtn(v) {
             if (v.type === '编辑') {
                 return this.$router.push('/class/createClass?type=edit')

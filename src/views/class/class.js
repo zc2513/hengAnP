@@ -11,13 +11,13 @@ export default {
             total: 0,
             lists: [],
             titles: [
-                { name: '序号', data: 'orderCode' },
-                { name: '班级名称', data: 'xzqMc' },
-                { name: '开班时间', data: 'undertakeTime' },
-                { name: '截止日期', data: 'scrapTime' },
-                { name: '应修学时', data: 'total' },
-                { name: '学员数量', data: 'consAddress' },
-                { name: '班主任', data: 'remarks' },
+                { name: '序号', data: 'classid' },
+                { name: '班级名称', data: 'classname' },
+                { name: '开班时间', data: 'startclass' },
+                { name: '截止日期', data: 'endclass' },
+                { name: '应修学时', data: 'classhour' },
+                { name: '学员数量', data: 'classnum' },
+                { name: '班主任', data: 'teacher' },
                 { name: '进度', data: 'consPhone' }
             ]
         }

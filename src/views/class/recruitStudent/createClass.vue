@@ -79,16 +79,19 @@
               ref="refTable"
               :data="chapters"
               align="center"
+              :empty-text="isChapter?&quot;数据加载中...&quot;:&quot;暂无数据&quot;"
               @expand-change="expandChange"
               @selection-change="handleSelectionChange"
             >
               <el-table-column type="selection" width="50" />
-              <el-table-column prop="address" class-name="expand-column-cls" width="50" abel-class-name="列明" type="expand">
+              <el-table-column prop="address" class-name="expand-column-cls" width="50" type="expand">
                 <template slot-scope="scope">
                   <el-table
+                    v-loading="isChildren"
                     :data="scope.row.children"
-                    align="center"
+                    :empty-text="isChildren?&quot;数据加载中...&quot;:&quot;暂无数据&quot;"
                     :show-header="false"
+                    align="center"
                     class="child-table"
                   >
                     <el-table-column width="50" />
@@ -97,12 +100,20 @@
                         <el-button size="mini" type="text" @click="previewVideo(row)">预览</el-button>
                       </template>
                     </el-table-column>
-                    <el-table-column prop="date" label="章节" />
-                    <el-table-column prop="name" label="名称" />
-                    <el-table-column prop="time" label="学时" />
-                    <el-table-column prop="type" label="类型" />
-                    <el-table-column prop="hz" label="初训/复审换证" />
-                    <el-table-column prop="teacher" label="讲师" />
+                    <el-table-column prop="date" label="章节" width="100">
+                      <template slot-scope="{$index}">
+                        {{ scope.$index+1 }}.{{ $index+1 }}节
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="title" label="名称" />
+                    <el-table-column prop="hours" label="学时" width="50" />
+                    <el-table-column prop="type" label="类型" width="120" />
+                    <el-table-column prop="hz" label="初训/复审换证" width="100">
+                      <template>
+                        初训/复审
+                      </template>
+                    </el-table-column>
+                    <el-table-column prop="teacher" label="讲师" width="100" />
                     <!-- <el-table-column width="50">
                       <template slot-scope="{row}">
                         <el-button size="mini" plain round type="primary" @click="previewVideo(row)">预览</el-button>
@@ -111,20 +122,20 @@
                   </el-table>
                 </template>
               </el-table-column>
-              <el-table-column prop="date" label="章节">
+              <el-table-column prop="date" label="章节" width="100">
                 <template slot-scope="{$index}">
                   章{{ $index+1 }}
                 </template>
               </el-table-column>
               <el-table-column prop="chapter_title" label="名称" />
-              <el-table-column prop="hours" label="学时" />
-              <el-table-column prop="type" label="类型" />
-              <el-table-column prop="hz" label="初训/复审换证">
+              <el-table-column prop="hours" label="学时" width="50" />
+              <el-table-column prop="type" label="类型" width="120" />
+              <el-table-column prop="hz" label="初训/复审换证" width="100">
                 <template>
                   初训/复审
                 </template>
               </el-table-column>
-              <el-table-column prop="teacher" label="讲师" />
+              <el-table-column prop="teacher" label="讲师" width="100" />
               <!-- <el-table-column label="操作" width="50">
                 <template slot-scope="{row}">
                   <div @click="toogleExpandTable(row)">
@@ -137,7 +148,7 @@
           </div>
         </div>
         <el-form-item class="t-c wfull mt20">
-          <el-button type="primary" plain round @click="onSubmit">确认创建</el-button>
+          <el-button type="primary" plain round :loading="isSub" @click="onSubmit">{{ isSub ? '数据提交中...' : '确认创建' }}</el-button>
         </el-form-item>
       </el-form>
       <el-dialog :modal-append-to-body="false" :visible.sync="dialogTableVisible" :before-close="handleClose">
@@ -151,17 +162,21 @@
 <script>
 import { phoneValidate } from '@/utils/validate'
 // eslint-disable-next-line no-unused-vars
-import { addclass, chapterlist } from '@/api/class'
+import { addclass, chapterlist, getKnotList } from '@/api/class'
 import { getIndustryType } from '@/api/dic'
 export default {
     data() {
         return {
-            dialogTableVisible: false,
+            isChapter: false, // 获取章
+            isChildren: false, // 获取节
+            isSub: false, // 是否提交
+            dialogTableVisible: false, // 视频弹窗状态
             video: {
                 name: '',
                 src: ''
             },
             formData: {
+                manager_id: this.$store.getters.token,
                 classname: '', // 班级名称
                 teacher: '', // 代课老师
                 way: '网授', // 授课方式
@@ -170,8 +185,7 @@ export default {
                 classnum: '', // 报名人数
                 startclass: '', // 开始时间
                 endclass: '', // 结束时间
-                course: '', // 已选课程
-                selectionTable: []// 已选课程
+                course: []// 已选课程
             },
             rules: {
                 classname: [
@@ -210,76 +224,6 @@ export default {
                     label: '面授'
                 }
             ],
-            tableData: [
-                {
-                    id: 1,
-                    date: '章1',
-                    name: '关于高级线路对接',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    time: 203,
-                    type: '电弧焊',
-                    hz: '初训/复审'
-                }, {
-                    id: 2,
-                    date: '章2',
-                    name: '关于高级线路对接',
-                    address: '上海市普陀区金沙江路 1517 弄',
-                    time: 203,
-                    type: '电弧焊',
-                    hz: '初训/复审'
-                }, {
-                    id: 3,
-                    date: '章3',
-                    name: '关于高级线路对接',
-                    address: '上海市普陀区金沙江路 1519 弄',
-                    time: 203,
-                    type: '电弧焊',
-                    hz: '初训/复审',
-                    children: [
-                        {
-                            id: 31,
-                            date: '节3.1',
-                            name: '视频测试',
-                            address: '上海市普陀区金沙江路 1519 弄',
-                            time: 203,
-                            type: '电弧焊',
-                            hz: '初训/复审',
-                            teacher: '张三',
-                            video: require('@/assets/mda-kgsziujvmhk8ak2h.mp4')
-                        },
-                        {
-                            id: 32,
-                            date: '节3.2',
-                            name: '写真',
-                            address: '上海市普陀区金沙江路 1519 弄',
-                            time: 203,
-                            type: '电弧焊',
-                            hz: '初训/复审',
-                            teacher: '李四',
-                            video: require('@/assets/mda-kg8j3tuk9k2ba6ma.mp4')
-                        },
-                        {
-                            id: 32,
-                            date: '节3.3',
-                            name: '一休小和尚',
-                            address: '上海市普陀区金沙江路 1519 弄',
-                            time: 203,
-                            type: '电弧焊',
-                            hz: '初训/复审',
-                            teacher: '王麻子',
-                            video: require('@/assets/mda-kdcnbux7did3cqti.mp4')
-                        }
-                    ]
-                }, {
-                    id: 4,
-                    date: '章4',
-                    name: '关于高级线路对接',
-                    address: '上海市普陀区金沙江路 1516 弄',
-                    time: 203,
-                    type: '电弧焊',
-                    hz: '初训/复审'
-                }
-            ],
             chapters: []// 章节列表
         }
     },
@@ -287,23 +231,22 @@ export default {
 
     },
     mounted() {
-        for (const item of this.tableData) { // 默认全选
-            this.$refs.refTable.toggleRowSelection(item)
-        }
+        // for (const item of this.tableData) { // 默认全选
+        //     this.$refs.refTable.toggleRowSelection(item)
+        // }
     },
     methods: {
         init() {
 
         },
-        lazyLoad(node, resolve) {
+        lazyLoad(node, resolve) { // 行业分类 加载项
             const { level } = node
             const url = level + 1
             const params = {}
             if (level) { params['id'] = node.value }
             let nodes = []
             getIndustryType(params, url).then(res => {
-                console.log(res, 4444)
-                nodes = res.map(item => {
+                nodes = res.data.map(item => {
                     return {
                         value: item.id,
                         label: item.name,
@@ -315,60 +258,79 @@ export default {
                 resolve(nodes)
             })
         },
-        onSubmit() {
-            console.log(this.formData, 111)
+        onSubmit() { // 数据提交
             this.$refs.formName.validate((valid) => {
                 if (valid) {
-                    alert('submit!')
+                    this.isSub = true
+                    addclass(this.formData).then(res => {
+                        this.$message.success(res.msg)
+                        this.isSub = false
+                        this.$router.push('/class/recruitStudent')
+                    }).catch(() => {
+                        this.isSub = false
+                    })
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
-            this.$emit('search', this.formData)
         },
-        toogleExpandTable(row) {
+        toogleExpandTable(row) { // 展开 收起功能（暂无使用
             this.$refs.refTable.toggleRowExpansion(row)
         },
-        previewVideo(row) {
-            console.log('视频预览', row)
-            if (!row.video) return this.$message('缺少视频路径')
+        previewVideo(row) { // 视频预览
+            if (!row.url) return this.$message('缺少视频路径')
             this.video = {
-                name: row.date + '/' + row.name,
-                src: row.video
+                name: row.title || '暂无标题',
+                src: row.url
             }
             this.dialogTableVisible = true
         },
-        handleClose(done) {
+        handleClose(done) { // 关闭视频弹窗
             this.video.src = ''
             done()
         },
-        expandChange(row, expandedRows) {
-            console.log(row, 111)
-            console.log(expandedRows, 2222)
+
+        handleSelectionChange(row) { // 多选，选中数据，处理
+            const arr = row.map(e => e.id)
+            this.formData.course = arr.length ? arr.join(',') : ''
         },
-        handleSelectionChange(row) {
-            this.formData.selectionTable = row
-        },
-        changeDate(time) {
+        changeDate(time) { // 时间选择器
             this.formData.startclass = time ? time[0] : ''
             this.formData.endclass = time ? time[1] : ''
         },
-        getChapterList() {
+        getChapterList() { // 获取章
+            this.chapters = []
             if (this.formData.types.length) {
+                this.isChapter = true
                 chapterlist({ types: this.formData.types }).then(res => {
-                    console.log('章', res)
-                    this.chapters = res
+                    const { data } = res
+                    this.chapters = data
                     this.$nextTick(() => {
-                        for (const item of res) { // 默认全选
+                        for (const item of data) { // 默认全选
                             this.$refs.refTable.toggleRowSelection(item)
                         }
                     })
+                    this.isChapter = false
                 }).catch(() => {
                     this.chapters = []
+                    this.isChapter = false
                 })
-            } else {
-                this.chapters = []
+            }
+        },
+        expandChange(row, expandedRows) { // 获取节
+            if (expandedRows.length) {
+                const { id } = row
+                this.isChildren = true
+                getKnotList({ id }).then(res => {
+                    for (const item of this.chapters) {
+                        if (item.id === id) {
+                            item['children'] = res.data
+                        }
+                    }
+                    this.isChildren = false
+                }).catch(() => {
+                    this.isChildren = false
+                })
             }
         }
     }
@@ -382,7 +344,7 @@ export default {
                 display: flex;
                 .el-form-item__content{
                     width: calc(100% - 120px);
-                    max-width: 380px;
+                    max-width: 550px;
                 }
                 label{
                     color: rgba(153,153,153,1);
