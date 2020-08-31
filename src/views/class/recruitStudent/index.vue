@@ -74,7 +74,7 @@ export default {
             if (type === '编辑') {
                 const query = {
                     type: 'edit',
-                    id: data.classid
+                    id: data.id
                 }
                 this.$router.push({
                     path: '/class/createClass',

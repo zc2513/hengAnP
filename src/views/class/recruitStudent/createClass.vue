@@ -245,7 +245,7 @@ export default {
     },
     methods: {
         init(id) {
-            detailsclass({ classid: id }).then(res => {
+            detailsclass({ id }).then(res => {
                 console.log('info', res)
             })
         },
