@@ -67,6 +67,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                :picker-options="pickerOptions0"
                 @change="changeDate"
               />
             </el-form-item>
@@ -167,6 +168,11 @@ import { getIndustryType } from '@/api/dic'
 export default {
     data() {
         return {
+            pickerOptions0: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7// 如果没有后面的-8.64e7就是不可以选择今天的
+                }
+            },
             isChapter: false, // 获取章
             isChildren: false, // 获取节
             isSub: false, // 是否提交
