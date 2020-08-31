@@ -71,7 +71,6 @@ export function getKnotList(data) {
     return request({
         url: '/index.php/Master/Course/selectcourse',
         method: 'post',
-        responseType: 'blob',
         data: qs.stringify(data)
     })
 }
