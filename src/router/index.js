@@ -85,39 +85,39 @@ export const constantRoutes = [
         }]
     },
     system,
-    // {
-    //     path: '/demo',
-    //     component: Layout,
-    //     redirect: '/demo/table',
-    //     name: 'demo',
-    //     meta: { title: 'demo', icon: 'example' },
-    //     children: [
-    //         {
-    //             path: 'table',
-    //             name: 'Table',
-    //             component: () => import('@/views/demo/table/index'),
-    //             meta: { title: 'Table', icon: 'table' }
-    //         },
-    //         {
-    //             path: 'form',
-    //             name: 'Form',
-    //             component: () => import('@/views/demo/form/index'),
-    //             meta: { title: 'form', icon: 'eye', noCache: true }
-    //         },
-    //         {
-    //             path: 'rich',
-    //             name: 'rich',
-    //             component: () => import('@/views/demo/rich/index'),
-    //             meta: { title: '富文本', icon: 'nested' }
-    //         },
-    //         {
-    //             path: 'tree',
-    //             name: 'Tree',
-    //             component: () => import('@/views/demo/tree/index'),
-    //             meta: { title: 'Tree', icon: 'tree' }
-    //         }
-    //     ]
-    // },
+    {
+        path: '/demo',
+        component: Layout,
+        redirect: '/demo/table',
+        name: 'demo',
+        meta: { title: 'demo', icon: 'example' },
+        children: [
+            {
+                path: 'table',
+                name: 'Table',
+                component: () => import('@/views/demo/table/index'),
+                meta: { title: 'Table', icon: 'table' }
+            },
+            {
+                path: 'form',
+                name: 'Form',
+                component: () => import('@/views/demo/form/index'),
+                meta: { title: 'form', icon: 'eye', noCache: true }
+            },
+            {
+                path: 'rich',
+                name: 'rich',
+                component: () => import('@/views/demo/rich/index'),
+                meta: { title: '富文本', icon: 'nested' }
+            },
+            {
+                path: 'tree',
+                name: 'Tree',
+                component: () => import('@/views/demo/tree/index'),
+                meta: { title: 'Tree', icon: 'tree' }
+            }
+        ]
+    },
     { path: '*', redirect: '/404', hidden: true }
 ]
 
