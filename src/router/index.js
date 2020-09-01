@@ -73,6 +73,12 @@ export const constantRoutes = [
             component: () => import('@/views/curriculum/index'),
             meta: { title: '课程管理', icon: 'curriculum' }
         }]
+    }, 
+    {
+        path: '/upfile',
+        name: 'upfile',
+        component: () => import('@/views/demo/upfile/index'),
+        meta: { title: 'upfile', icon: 'table' }
     },
     {
         path: '/student',
@@ -98,6 +104,7 @@ export const constantRoutes = [
     //             component: () => import('@/views/demo/table/index'),
     //             meta: { title: 'Table', icon: 'table' }
     //         },
+            
     //         {
     //             path: 'form',
     //             name: 'Form',
