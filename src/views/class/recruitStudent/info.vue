@@ -32,8 +32,16 @@
           <div v-if="$route.query.type !== 'recruitStudent'" class="cursor ml15" @click="btnsave($event)"> 批量打印课时 </div>
         </div>
       </div>
-      <tablePug class="mt30" :btns="btn" :lists="lists" :titles="titles" @sendVal="getBtn" />
-      <page :total="total" :page-size="pageSize" @pagesend="getPageData" />
+      <tablePug
+        v-loading="tableloading"
+        element-loading-text="数据加载中"
+        class="mt15"
+        :btns="btn"
+        :lists="lists"
+        :titles="titles"
+        @sendVal="getBtn"
+      />
+      <page :total="total" :page-size="searchData.size" @pagesend="getPageData" @pagesizes="pagesizes" />
     </div>
     <el-dialog
       :modal-append-to-body="false"
@@ -64,15 +72,28 @@
 </template>
 
 <script>
-import classMixin from './../class'
+// import classMixin from './../class'
+import tablePug from '@/components/table'
+import page from '@/components/table/page'
 import studentInfo from '@/components/studentInfo'
 import { phoneValidate, IDcardValidate } from '@/utils/validate'
+import { getStudents } from '@/api/class'
 export default {
     name: 'RecruitStudentInfo',
-    components: { studentInfo },
-    mixins: [classMixin],
+    components: { tablePug, page, studentInfo },
+    // mixins: [classMixin],
+
     data() {
         return {
+            total: 0, // 分页总数量
+            lists: [], // 展示数据
+            tableloading: false, // 表格加载
+            searchData: {// 搜索条件
+                manager_id: this.$store.getters.token,
+                size: 8,
+                page: 1,
+                status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
+            },
             titles: [
                 { name: '序号', data: 'orderCode' },
                 { name: '学员姓名', data: 'agentName' },
@@ -143,8 +164,14 @@ export default {
         } else {
             // this.$router.push('/404')
         }
+        this.init(this.$route.query.id)
     },
     methods: {
+        init(class_id) {
+            getStudents({ class_id }).then(res => {
+                console.log(res, '学员列表')
+            })
+        },
         btnsave(e) {
             this.$message(e.target.innerText)
         },

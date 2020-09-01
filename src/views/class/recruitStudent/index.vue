@@ -15,7 +15,15 @@
           <el-button type="primary" round class="cursor" @click="$router.push('/class/createClass')">创建班级</el-button>
         </div>
       </div>
-      <tablePug class="mt15" :btns="btn" :lists="lists" :titles="titles" @sendVal="getBtn" />
+      <tablePug
+        v-loading="tableloading"
+        element-loading-text="数据加载中"
+        class="mt15"
+        :btns="btn"
+        :lists="lists"
+        :titles="titles"
+        @sendVal="getBtn"
+      />
       <page
         :total="total"
         :page-size="searchData.size"
@@ -43,15 +51,12 @@
 <script>
 import classMixin from './../class'
 // eslint-disable-next-line no-unused-vars
-import { selectclass, detailscalss, Qrcode } from '@/api/class'
+import { selectclass, detailscalss, Qrcode, delclass } from '@/api/class'
 export default {
     name: 'RecruitStudent',
     mixins: [classMixin],
     data() {
         return {
-            qrCodesType: false,
-            imgLoading: true,
-            qrCodeSrc: '',
             btn: {
                 title: '操作',
                 width: '270',
@@ -80,20 +85,24 @@ export default {
                     path: '/class/createClass',
                     query
                 })
-                return
             }
             if (type === '详情') {
-                return this.$router.push('/class/recruitStudent/info?type=recruitStudent')
+                this.$router.push({
+                    path: '/class/recruitStudent/info',
+                    query: {
+                        type: 'recruitStudent',
+                        id: data.id
+                    }
+                })
             }
             if (type === '解散') {
-                return this.$message(type)
+                this.dissolve(data)
             }
             if (type === '二维码') {
-                this.qrCodesType = true
-                this.qrCodeSrc = `${process.env.VUE_APP_BASE_API}/index.php/Master/Qrcode/index?classid=${data.classid}&id=${this.$store.getters.token}`
+                this.showQrCode(data)
             }
         },
-        handleCloseImg(done) {
+        handleCloseImg(done) { // 关闭二维码预览弹窗
             this.qrCodeSrc = ''
             this.imgLoading = true
             done()

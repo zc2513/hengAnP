@@ -10,8 +10,21 @@
       <div class="flsb">
         <div class="bold">班级列表</div>
       </div>
-      <tablePug class="mt15" :btns="btn" :lists="lists" :titles="titles" @sendVal="getBtn" />
-      <page :total="total" :page-size="pageSize" @pagesend="getPageData" />
+      <tablePug
+        v-loading="tableloading"
+        element-loading-text="数据加载中"
+        class="mt15"
+        :btns="btn"
+        :lists="lists"
+        :titles="titles"
+        @sendVal="getBtn"
+      />
+      <page
+        :total="total"
+        :page-size="searchData.size"
+        @pagesend="getPageData"
+        @pagesizes="pagesizes"
+      />
     </div>
   </div>
 </template>

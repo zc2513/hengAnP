@@ -41,6 +41,7 @@
           <el-col class="mb10" :span="12">
             <el-form-item label="行业" prop="types">
               <el-cascader
+                ref="refTypes"
                 v-model="formData.types"
                 placeholder="请选择"
                 :props="{lazy:true,lazyLoad}"
@@ -238,11 +239,6 @@ export default {
             this.init(this.$route.query.id)
         }
     },
-    mounted() {
-        // for (const item of this.tableData) { // 默认全选
-        //     this.$refs.refTable.toggleRowSelection(item)
-        // }
-    },
     methods: {
         init(id) {
             detailsclass({ id }).then(res => {
@@ -272,6 +268,8 @@ export default {
             this.$refs.formName.validate((valid) => {
                 if (valid) {
                     this.isSub = true
+                    this.formData['typesName'] = this.$refs.refTypes.inputValue
+                    this.formData['typesStr'] = this.formData.types.join(',')
                     addclass(this.formData).then(res => {
                         this.$message.success(res.msg)
                         this.isSub = false

@@ -76,7 +76,15 @@ export function updateclass(data) {
     })
 }
 
-// 删除班级
+// 获取班级学员信息
+export function getStudents(data) {
+    return request({
+        url: '/index.php/Master/User/index',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+// 删除/解散班级
 export function delclass(data) {
     return request({
         url: '/index.php/Master/Class/delclass',
