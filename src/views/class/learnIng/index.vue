@@ -44,6 +44,7 @@
 
 <script>
 import classMixin from './../class'
+import { updateclass } from '@/api/class'
 export default {
     name: 'LearnIng',
     mixins: [classMixin],
@@ -53,11 +54,11 @@ export default {
             qrCodeSrc: '',
             btn: {
                 title: '操作',
-                width: '270',
+                width: '180',
                 btnlist: [
                     { con: '结业', type: 'success' },
                     { con: '详情', type: 'primary' },
-                    { con: '解散', type: 'warning' },
+                    // { con: '解散', type: 'warning' },
                     { con: '二维码', type: 'primary', plain: true }
                 ]
             }
@@ -70,8 +71,9 @@ export default {
         getBtn(v) {
             const { type, data } = v
             if (type === '结业') {
-                console.log(data)
-                return this.$message(type)
+                updateclass({ status: 2, id: data.id }).then(res => {
+                    console.log(res, '结业')
+                })
             }
             if (type === '详情') {
                 this.$router.push({

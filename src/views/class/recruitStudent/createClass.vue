@@ -1,6 +1,6 @@
 <template>
   <!-- 创建班级 -->
-  <div class="create-box">
+  <div v-loading="boxLoading" class="create-box" element-loading-text="页面数据加载中...">
     <div class="content-box">
       <div class="flsb">
         <div class="bold">完善您的班级信息</div>
@@ -149,8 +149,12 @@
 
           </div>
         </div>
-        <el-form-item class="t-c wfull mt20">
-          <el-button type="primary" plain round :loading="isSub" @click="onSubmit">{{ isSub ? '数据提交中...' : '确认创建' }}</el-button>
+        <el-form-item v-if="$route.query.type === 'edit'" class="t-c wfull mt20">
+          <el-button type="primary" plain round @click="$router.push('/class/recruitStudent')">取消</el-button>
+          <el-button type="primary" round :loading="isSub" @click="onSubmit">{{ isSub ? '修改中...' : '确认修改' }}</el-button>
+        </el-form-item>
+        <el-form-item v-else class="t-c wfull mt20">
+          <el-button type="primary" round :loading="isSub" @click="onSubmit">{{ isSub ? '数据提交中...' : '确认创建' }}</el-button>
         </el-form-item>
       </el-form>
       <el-dialog :modal-append-to-body="false" :visible.sync="dialogTableVisible" :before-close="handleClose">
@@ -231,7 +235,8 @@ export default {
                     label: '面授'
                 }
             ],
-            chapters: []// 章节列表
+            chapters: [], // 章节列表
+            boxLoading: false
         }
     },
     created() {
@@ -241,8 +246,13 @@ export default {
     },
     methods: {
         init(id) {
+            this.boxLoading = true
             detailsclass({ id }).then(res => {
-                console.log('info', res)
+                const { classid, startclass, endclass, course } = res.data
+                this.times = [startclass, endclass]
+                this.formData = res.data
+                this.formData['classid'] = classid
+                this.getChapterList(course.split(','))
             })
         },
         lazyLoad(node, resolve) { // 行业分类 加载项
@@ -253,6 +263,7 @@ export default {
             let nodes = []
             getIndustryType(params, url).then(res => {
                 nodes = res.data.map(item => {
+                    if (level === 3) this.boxLoading = false
                     return {
                         value: item.id,
                         label: item.name,
@@ -261,22 +272,31 @@ export default {
                 })
                 resolve(nodes)
             }).catch(() => {
+                this.boxLoading = false
                 resolve(nodes)
             })
         },
         onSubmit() { // 数据提交
             this.$refs.formName.validate((valid) => {
                 if (valid) {
+                    if (!this.formData.course) return this.$message.error('已选课程不能为空')
                     this.isSub = true
-                    this.formData['typesName'] = this.$refs.refTypes.inputValue
+                    this.formData['typesname'] = this.$refs.refTypes.inputValue
                     this.formData['typesStr'] = this.formData.types.join(',')
-                    addclass(this.formData).then(res => {
-                        this.$message.success(res.msg)
-                        this.isSub = false
-                        this.$router.push('/class/recruitStudent')
-                    }).catch(() => {
-                        this.isSub = false
-                    })
+                    if (this.$route.query.type === 'edit') {
+                        updateclass(this.formData).then(res => {
+                            this.$message.success(res.msg || '修改成功')
+                            this.$router.push('/class/recruitStudent')
+                        })
+                    } else {
+                        addclass(this.formData).then(res => {
+                            this.$message.success(res.msg)
+                            this.isSub = false
+                            this.$router.push('/class/recruitStudent')
+                        }).catch(() => {
+                            this.isSub = false
+                        })
+                    }
                 } else {
                     return false
                 }
@@ -306,7 +326,7 @@ export default {
             this.formData.startclass = time ? time[0] : ''
             this.formData.endclass = time ? time[1] : ''
         },
-        getChapterList() { // 获取章
+        getChapterList(noArr = false) { // 获取章
             this.chapters = []
             if (this.formData.types.length) {
                 this.isChapter = true
@@ -315,8 +335,13 @@ export default {
                     this.chapters = data
                     this.$nextTick(() => {
                         for (const item of data) { // 默认全选
-                            this.$refs.refTable.toggleRowSelection(item)
+                            if (noArr && !(noArr.includes(item.id))) {
+                                // ... 非选中处理
+                            } else {
+                                this.$refs.refTable.toggleRowSelection(item)
+                            }
                         }
+                        // if (noArr) this.boxLoading = false
                     })
                     this.isChapter = false
                 }).catch(() => {

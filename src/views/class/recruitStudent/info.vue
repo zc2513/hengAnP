@@ -88,8 +88,8 @@ export default {
             searchData: {// 搜索条件
                 manager_id: this.$store.getters.token,
                 size: 8,
-                page: 1,
-                status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
+                page: 1
+                // status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
             },
             titles: [
                 { name: '序号', data: 'orderCode' },
@@ -157,14 +157,17 @@ export default {
                 { con: '删除', type: 'warning' }
             ])
             this.$set(this.btn, 'width', 120)
+            this.searchData.status = 0
         } else if (pathType === 'learning') {
             console.log('使用原始配置')
+            this.searchData.status = 1
         } else if (pathType === 'finish') {
             this.$set(this.btn, 'width', 150)
             this.$set(this.btn, 'btnlist', [
                 { con: '打印课时', type: 'warning' },
                 { con: '查看', type: 'primary' }
             ])
+            this.searchData.status = 2
         } else {
             // this.$router.push('/404')
         }
@@ -172,7 +175,8 @@ export default {
     },
     methods: {
         init(class_id) {
-            getStudents({ class_id }).then(res => {
+            const data = { class_id, ...this.searchstudent }
+            getStudents(data).then(res => {
                 console.log(res, '学员列表')
             })
         },
