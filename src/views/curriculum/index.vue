@@ -74,11 +74,11 @@ export default {
             ],
             btn: {
                 title: '操作',
-                width: '250',
+                width: '200',
                 btnlist: [
                     { con: '编辑', type: 'info' },
                     { con: '视频', type: 'primary' },
-                    { con: '习题', type: 'primary' },
+                    // { con: '习题', type: 'primary' },
                     { con: '删除', type: 'warning', confirm: true }
                 ]
             }

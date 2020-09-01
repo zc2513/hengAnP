@@ -72,7 +72,6 @@
 </template>
 
 <script>
-// import classMixin from './../class'
 import tablePug from '@/components/table'
 import page from '@/components/table/page'
 import studentInfo from '@/components/studentInfo'
@@ -81,8 +80,6 @@ import { getStudents } from '@/api/class'
 export default {
     name: 'RecruitStudentInfo',
     components: { tablePug, page, studentInfo },
-    // mixins: [classMixin],
-
     data() {
         return {
             total: 0, // 分页总数量
@@ -141,6 +138,13 @@ export default {
                     { min: 15, max: 18, message: '身份证号码长度在 15 到 18 个字符', trigger: 'blur' },
                     { validator: IDcardValidate, trigger: 'blur' }
                 ]
+            },
+            getPageData(params) { // 页
+                this.searchData.page = params
+            },
+            pagesizes(num) { // 每页多少个并重置page为1
+                this.searchData.size = num
+                this.searchData.page = 1
             }
         }
     },

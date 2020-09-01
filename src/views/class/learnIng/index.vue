@@ -68,20 +68,25 @@ export default {
             this.$message(e.target.innerText)
         },
         getBtn(v) {
-            console.log(v)
-            if (v.type === '详情') {
-                return this.$router.push('/class/recruitStudent/info?type=learning')
+            const { type, data } = v
+            if (type === '结业') {
+                console.log(data)
+                return this.$message(type)
             }
-            if (v.type === '二维码') {
-                this.qrCodesType = true
-                this.qrCodeSrc = require('@/assets/qrcode.png')
-                return
+            if (type === '详情') {
+                this.$router.push({
+                    path: '/class/recruitStudent/info',
+                    query: {
+                        type: 'learning',
+                        id: data.id
+                    }
+                })
             }
-            if (v.type === '解散') {
-                return this.$message(v.type)
+            if (type === '解散') {
+                this.dissolve(data)
             }
-            if (v.type === '结业') {
-                return this.$message(v.type)
+            if (type === '二维码') {
+                this.showQrCode(data)
             }
         }
     }
