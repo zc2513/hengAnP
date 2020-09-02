@@ -36,3 +36,11 @@ export function url(data) {
         data: qs.stringify(data)
     })
 }
+
+// 获取阿里云凭证
+export function getTicket() {
+    return request({
+        url: 'http://demo-vod.cn-shanghai.aliyuncs.com/voddemo/CreateSecurityToken?BusinessType=vodai&TerminalType=pc&DeviceModel=iPhone9,2&UUID=67999yyuuuy&AppVersion=1.0.0',
+        method: 'get'
+    })
+}

@@ -14,9 +14,18 @@
           <span @click="btnsave($event)">新增课件</span>
         </div>
       </div>
-      <tablePug class="mt15" :btns="btn" :lists="lists" :titles="titles" @sendVal="getVal" />
+      <tablePug
+        v-loading="tableloading"
+        element-loading-text="数据加载中"
+        class="mt15"
+        :btns="btn"
+        :lists="lists"
+        :titles="titles"
+        @sendVal="getVal"
+      />
       <page
         :total="total"
+        :current-page="searchData.page"
         :page-size="searchData.size"
         @pagesend="getPageData"
         @pagesizes="pagesizes"
@@ -31,12 +40,12 @@
       <template #title>{{ videoDialog.name }} </template>
       <video autoplay controlsList="nodownload" controls :src="videoDialog.src" />
     </el-dialog>
-    <!-- :before-close="handleClose" -->
     <el-drawer
       ref="drawer"
       :visible.sync="editDialog"
       :show-close="false"
       :with-header="false"
+      :before-close="handleClose"
       destroy-on-close
       direction="rtl"
     >
@@ -50,7 +59,6 @@
 import tablePug from '@/components/table'
 import search from './search'
 import page from '@/components/table/page'
-import datas from '@/assets/json/data'
 import addFrom from './add'
 // eslint-disable-next-line no-unused-vars
 import { selectcourse, delectecourse } from '@/api/curriculum'
@@ -68,21 +76,18 @@ export default {
             editData: null,
             total: 0,
             searchData: {// 搜索条件
-                manager_id: this.$store.getters.token,
+                manager_id: this.$store.getters.classId,
                 size: 8,
                 page: 1
             },
             queryData: {}, // 查询条件
             lists: [],
             titles: [
-                { name: '序号', data: 'orderCode' },
-                { name: '课件名称', data: 'xzqMc' },
-                { name: '课时数量', data: 'total' },
-                { name: '课件ID', data: 'orderCode' },
-                { name: '课件时长', data: 'total' },
-                { name: '讲师姓名', data: 'remarks' },
-                { name: '证书编号', data: 'orderCode' },
-                { name: '课件状态', data: 'state' }
+                { name: '课件ID', data: 'id' },
+                { name: '课件名称', data: 'title' },
+                { name: '课件时长', data: 'hours' },
+                { name: '讲师姓名', data: 'teacher' }
+                // { name: '课件状态', data: 'state' }
             ],
             btn: {
                 title: '操作',
@@ -92,22 +97,26 @@ export default {
                     { con: '视频', type: 'primary' },
                     { con: '删除', type: 'warning', confirm: true }
                 ]
-            }
+            },
+            tableloading: false // 表格加载
 
         }
     },
     created() {
-        this.getPageData(1)
         this.init()
     },
     methods: {
         init() {
             // 初始化页面数据
-            const data = {
-                ...this.searchData,
-                ...this.queryData
-            }
+            this.tableloading = true
+            const data = { ...this.searchData, ...this.queryData }
             console.log(data)
+            selectcourse(data).then(res => {
+                console.log(res, 4444)
+                this.total = res.data.total
+                this.lists = res.data.list
+                this.tableloading = false
+            }).catch(() => { this.tableloading = false })
         },
         btnsave(e) {
             if (e.target.innerText === '新增课件') {
@@ -117,20 +126,18 @@ export default {
                 this.$message(e.target.innerText)
             }
         },
-        getPageData(params) { // 页数
-            this.searchData.page = params
+        getPageData(page) { // 页数
+            this.searchData.page = page
             this.init()
-            this.total = datas.length
-            this.lists = datas.slice((params - 1) * 8, params * 8)
         },
         pagesizes(num) { // 每页多少个并重置page为1
             this.searchData.size = num
             this.searchData.page = 1
             this.init()
         },
-        getVal(v) {
-            if (v.type === '编辑') {
-                this.$message(`${v.type}---待处理`)
+        getVal({ data, type }) {
+            if (type === '编辑') {
+                this.$message(`${type}---待处理`)
                 this.editData = {
                     name: '张三看上了王老五',
                     type: '双皮奶',
@@ -141,18 +148,18 @@ export default {
                 this.editDialog = true
                 return
             }
-            if (v.type === '视频') {
-                if (v.data.video) {
+            if (type === '视频') {
+                if (data.url) {
                     this.videoDialog = {
                         type: true,
-                        name: v.data.cName,
-                        src: v.data.video
+                        name: data.title,
+                        src: data.url
                     }
                 } else {
                     this.$message('暂无视频')
                 }
             }
-            if (v.type === '删除') {
+            if (type === '删除') {
                 this.$confirm('是否删除当前课件?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -171,16 +178,14 @@ export default {
             this.init()
         },
         handleClose(done) {
-            if (this.loading) {
-                return
-            }
+            console.log(this.editDialog)
             this.$confirm('确定要提交表单吗？').then(_ => {
-                this.loading = true
+                this.editDialog = true
                 this.timer = setTimeout(() => {
                     done()
                     // 动画关闭需要一定的时间
                     setTimeout(() => {
-                        this.loading = false
+                        this.editDialog = false
                     }, 400)
                 }, 2000)
             }).catch(_ => {})

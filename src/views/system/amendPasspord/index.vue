@@ -95,6 +95,8 @@ export default {
                         this.$message.success(res.msg)
                         this.$refs.userForm.resetFields()
                         this.loading = false
+                        // await this.$store.dispatch('user/logout')
+                        // this.$router.push(`/login?redirect='/home'`)
                     }).catch(() => { this.loading = false })
                 } else {
                     return false

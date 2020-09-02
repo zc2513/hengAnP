@@ -154,10 +154,8 @@ export default {
     justify-content: center;
     align-items: center;
     .upload {
-        // width: 100%;
-        // height: 100%;
-        width: 500px;
-        height: 300px;
+        width: 100%;
+        height: 100%;
         border: 1px dashed #999;
         display: flex;
         justify-content: center;

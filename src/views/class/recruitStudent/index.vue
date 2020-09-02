@@ -26,6 +26,7 @@
       />
       <page
         :total="total"
+        :current-page="searchData.page"
         :page-size="searchData.size"
         @pagesend="getPageData"
         @pagesizes="pagesizes"

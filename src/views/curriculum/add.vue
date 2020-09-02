@@ -3,16 +3,17 @@
     <h4 v-if="pageType === 'edit'">编辑课件</h4>
     <h4 v-if="pageType === 'add'">新增课件</h4>
     <div class="drawer-from">
+      <!-- label-position="top" -->
       <el-form
         ref="ruleForm"
-        label-position="top"
         :model="formData"
         :rules="rules"
+        label-width="80px"
       >
-        <el-form-item label="课件名称" prop="name">
-          <el-input v-model="formData.name" />
+        <el-form-item label="课件名称" prop="title">
+          <el-input v-model="formData.title" />
         </el-form-item>
-        <el-form-item label="培训类型" prop="type">
+        <el-form-item label="所属章节" prop="type">
           <el-select v-model="formData.type" placeholder="请选择">
             <el-option
               v-for="item in options"
@@ -25,15 +26,16 @@
         <el-form-item label="培训讲师" prop="teacher">
           <el-input v-model="formData.teacher" />
         </el-form-item>
-        <el-form-item label="课件图片" prop="img">
+        <el-form-item label="课件图片" prop="url">
           <el-upload
             action=""
             drag
             :multiple="false"
             :show-file-list="false"
             :on-change="kjChange"
+            accept="image/*"
           >
-            <img v-if="formData.img" :src="formData.img" class="avatar" width="360" height="180">
+            <img v-if="formData.url" :src="formData.url" class="avatar" width="360" height="180">
             <i class="el-icon-upload" />
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <p class="fontGay" style="height:14px;">建议上传尺寸 640*365</p>
@@ -47,6 +49,12 @@
             type="textarea"
             :autosize="{ minRows: 3, maxRows: 6 }"
           />
+        </el-form-item>
+        <el-form-item label="视频上传" prop="videoId">
+          <div class="videoBox">
+            <!-- <upVideo :video-id.sync="formData.videoId" /> -->
+            <upVideo v-model="formData.videoId" />
+          </div>
         </el-form-item>
       </el-form>
     </div>
@@ -64,7 +72,9 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import { addcourse } from '@/api/curriculum'
+import upVideo from '@/components/upVideo'
 export default {
+    components: { upVideo },
     props: {
         editData: {
             type: Object,
@@ -76,27 +86,31 @@ export default {
             pageType: '',
             fileList: [],
             formData: {// 新增/编辑科技
-                name: '',
+                title: '',
                 type: '',
                 teacher: '',
-                img: '',
-                des: ''
+                url: '',
+                des: '',
+                videoId: ''
             },
             rules: {
-                name: [
+                title: [
                     { required: true, message: '课件名称不能为空', trigger: 'blur' }
                 ],
                 type: [
-                    { required: true, message: '请选培训类型', trigger: 'change' }
+                    { required: true, message: '请选当前课件所属的章', trigger: 'change' }
                 ],
                 teacher: [
                     { required: true, message: '讲师不能为空', trigger: 'blur' }
                 ],
-                img: [
+                url: [
                     { required: true, message: '请上传封面图片', trigger: 'change' }
                 ],
                 des: [
                     { required: true, message: '请填写课件描述信息', trigger: 'blur' }
+                ],
+                videoId: [
+                    { required: true, message: '请上传视频', trigger: ['change', 'blur'] }
                 ]
             },
             options: [{
@@ -123,12 +137,17 @@ export default {
     },
     methods: {
         kjChange(file) {
-            this.formData.img = URL.createObjectURL(file.raw)
+            this.formData.url = URL.createObjectURL(file.raw)
         },
         subData() {
+            console.log(this.formData)
             this.$refs.ruleForm.validate((valid) => {
                 console.log(valid, 111)
                 if (!valid) return
+                addcourse(this.formData).then(res => {
+                    console.log(res)
+                    this.$message.success(res.msg)
+                })
             })
         }
     }
@@ -162,6 +181,9 @@ export default {
                 border-radius:0;
             }
         }
+    }
+    .videoBox{
+        height:200px;
     }
 
 }

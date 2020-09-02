@@ -22,11 +22,10 @@ export default {
         pageSize: {
             type: Number,
             default: 10
-        }
-    },
-    data() {
-        return {
-            currentPage: 1
+        },
+        currentPage: {
+            type: Number,
+            default: 1
         }
     },
     methods: {
