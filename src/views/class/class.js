@@ -60,7 +60,6 @@ export default {
         init(params) { // 数据初始化
             this.tableloading = true
             selectclass(params).then(res => {
-                console.log(res, 4444)
                 const { data } = res
                 this.total = Number(data.count)
                 for (const item of data.list) {
@@ -80,7 +79,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 delclass({ id: data.id }).then(res => {
-                    this.$message.success('删除成功!')
+                    this.$message.success(res.msg)
                     this.init(this.searchData)
                 })
             }).catch(() => {

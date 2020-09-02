@@ -26,16 +26,20 @@
         @pagesizes="pagesizes"
       />
     </div>
+    <!-- <print v-if="printId" /> -->
   </div>
 </template>
 
 <script>
 import classMixin from './../class'
+// import print from '@/components/print'
 export default {
     name: 'Home',
+    // components: { print },
     mixins: [classMixin],
     data() {
         return {
+            // printId: false,
             btn: {
                 title: '操作',
                 width: '160',
@@ -54,6 +58,9 @@ export default {
             if (v.type === '详情') {
                 this.$router.push('/class/recruitStudent/info?type=finish')
             } else {
+                const routeData = this.$router.resolve({ path: '/dayin', query: { id: 1 }})
+                window.open(routeData.href, '_blank')
+                // this.printId = 1
                 this.$message(v.type)
             }
         }
