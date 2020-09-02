@@ -67,7 +67,7 @@ export function detailsclass(data) {
     })
 }
 
-// 更新新班级信息
+// 更新新班级信息-结业
 export function updateclass(data) {
     return request({
         url: '/index.php/Master/Class/updateclass',

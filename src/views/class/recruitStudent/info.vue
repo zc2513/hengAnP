@@ -72,7 +72,6 @@
 </template>
 
 <script>
-// import classMixin from './../class'
 import tablePug from '@/components/table'
 import page from '@/components/table/page'
 import studentInfo from '@/components/studentInfo'
@@ -81,8 +80,6 @@ import { getStudents } from '@/api/class'
 export default {
     name: 'RecruitStudentInfo',
     components: { tablePug, page, studentInfo },
-    // mixins: [classMixin],
-
     data() {
         return {
             total: 0, // 分页总数量
@@ -91,8 +88,8 @@ export default {
             searchData: {// 搜索条件
                 manager_id: this.$store.getters.token,
                 size: 8,
-                page: 1,
-                status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
+                page: 1
+                // status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
             },
             titles: [
                 { name: '序号', data: 'orderCode' },
@@ -141,6 +138,13 @@ export default {
                     { min: 15, max: 18, message: '身份证号码长度在 15 到 18 个字符', trigger: 'blur' },
                     { validator: IDcardValidate, trigger: 'blur' }
                 ]
+            },
+            getPageData(params) { // 页
+                this.searchData.page = params
+            },
+            pagesizes(num) { // 每页多少个并重置page为1
+                this.searchData.size = num
+                this.searchData.page = 1
             }
         }
     },
@@ -153,14 +157,17 @@ export default {
                 { con: '删除', type: 'warning' }
             ])
             this.$set(this.btn, 'width', 120)
+            this.searchData.status = 0
         } else if (pathType === 'learning') {
             console.log('使用原始配置')
+            this.searchData.status = 1
         } else if (pathType === 'finish') {
             this.$set(this.btn, 'width', 150)
             this.$set(this.btn, 'btnlist', [
                 { con: '打印课时', type: 'warning' },
                 { con: '查看', type: 'primary' }
             ])
+            this.searchData.status = 2
         } else {
             // this.$router.push('/404')
         }
@@ -168,7 +175,8 @@ export default {
     },
     methods: {
         init(class_id) {
-            getStudents({ class_id }).then(res => {
+            const data = { class_id, ...this.searchstudent }
+            getStudents(data).then(res => {
                 console.log(res, '学员列表')
             })
         },
