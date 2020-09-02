@@ -11,11 +11,11 @@
       <el-form-item label="用户姓名" prop="name">
         <el-input v-model="user.name" readonly />
       </el-form-item>
-      <el-form-item label="原始密码" prop="oldpass">
-        <el-input v-model="user.oldpass" placeholder="请输入原始密码" />
+      <el-form-item label="原始密码" prop="password">
+        <el-input v-model="user.password" placeholder="请输入原始密码" />
       </el-form-item>
-      <el-form-item label="新密码" prop="newPass">
-        <el-input v-model="user.newPass" placeholder="请输入新密码" />
+      <el-form-item label="新密码" prop="newpassword">
+        <el-input v-model="user.newpassword" placeholder="请输入新密码" />
       </el-form-item>
       <el-form-item label="确认新密码" prop="checkPass">
         <el-input v-model="user.checkPass" placeholder="请再次输入新密码" />
@@ -31,8 +31,8 @@
 </template>
 
 <script>
+import { amendPassword } from '@/api/user'
 export default {
-
     props: {
         passType: {
             type: Boolean,
@@ -53,7 +53,7 @@ export default {
         const validatePass2 = (rule, value, callback) => {
             if (value === '') {
                 callback(new Error('请再次确认新密码'))
-            } else if (value !== this.user.newPass) {
+            } else if (value !== this.user.newpassword) {
                 callback(new Error('两次输入密码不一致!'))
             } else {
                 callback()
@@ -62,19 +62,20 @@ export default {
         return {
             loading: false,
             user: {// 新增/编辑科技
-                name: '名字',
-                oldpass: '',
-                newPass: '',
+                manager_id: this.$store.getters.classId,
+                name: this.$store.getters.name,
+                password: '',
+                newpassword: '',
                 checkPass: ''
             },
             rules: {
                 name: [
                     { required: true, message: '姓名不能为空', trigger: 'blur' }
                 ],
-                oldpass: [
+                password: [
                     { required: true, message: '原始密码不能为空', trigger: 'blur' }
                 ],
-                newPass: [
+                newpassword: [
                     { min: 6, message: '密码长度不能低于6个字符', trigger: 'blur' },
                     { required: true, validator: validatePass, trigger: 'blur' }
                 ],
@@ -90,13 +91,12 @@ export default {
             this.$refs.userForm.validate((valid) => {
                 if (valid) {
                     this.loading = true
-                    setTimeout(() => {
-                        this.$message.success('修改成功')
-                        this.loading = false
+                    amendPassword(this.user).then(res => {
+                        this.$message.success(res.msg)
                         this.$refs.userForm.resetFields()
-                    }, 2000)
+                        this.loading = false
+                    }).catch(() => { this.loading = false })
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })

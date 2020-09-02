@@ -25,7 +25,7 @@ export function logout() {
 
 export function amendPassword(data) {
     return request({
-        url: '/index.php/Master/Diy/detaildiy',
+        url: '/index.php/Master/Login/updatelogin',
         method: 'post',
         data: qs.stringify(data)
     })
