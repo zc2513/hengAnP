@@ -118,7 +118,8 @@ export const constantRoutes = [
             }
         ]
     },
-    { path: '*', redirect: '/404', hidden: true }
+    { path: '*', redirect: '/404', hidden: true },
+    { path: '/dayin', component: () => import('@/views/dayin'), hidden: true }
 ]
 
 const createRouter = () => new Router({

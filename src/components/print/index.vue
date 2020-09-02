@@ -1,9 +1,8 @@
 <template>
   <div>
-    <div><input type="button" value="打印" @click="Print()"></div>
     <!--startprint-->
     <div class="print_box">
-      <div v-for="i in 6" :key="i" style="page-break-after:always">
+      <div v-for="i in 3" :key="i" style="page-break-after:always">
         <table class="ss">
           <tbody>
             <tr>
@@ -70,14 +69,35 @@
 </template>
 <script>
 export default {
+    props: {
+        // eslint-disable-next-line vue/require-default-prop
+        id: String
+    },
+    data() {
+        return {
+            one: true
+        }
+    },
+    created() {
+        this.init()
+    },
     methods: {
+        init() {
+            // axios 请求
+            if (this.one) {
+                setTimeout(() => {
+                    this.Print()
+                    this.one = false
+                }, 2000)
+            }
+        },
         Print() {
             const newstr = document.getElementsByClassName('print_box')[0].innerHTML
             window.document.body.innerHTML = newstr
-            const oldstr = window.document.body.innerHTML
+            // const oldstr = window.document.body.innerHTML
             window.print()
-            window.location.reload() // 解决打印之后按钮失效的问题
-            window.document.body.innerHTML = oldstr
+            // window.location.reload() // 解决打印之后按钮失效的问题
+            // window.document.body.innerHTML = oldstr
             return false
         }
     }
