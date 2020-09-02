@@ -6,7 +6,7 @@
     <el-form-item label="讲师姓名">
       <el-input v-model="formData.name" clearable placeholder="讲师姓名" />
     </el-form-item>
-    <el-form-item label="课件状态">
+    <!-- <el-form-item label="课件状态">
       <el-select v-model="formData.status" placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -15,7 +15,7 @@
           :value="item.value"
         />
       </el-select>
-    </el-form-item>
+    </el-form-item> -->
     <el-form-item label="岗位类型">
       <el-select v-model="formData.post" placeholder="请选择">
         <el-option
@@ -48,15 +48,6 @@ export default {
             }, {
                 value: '选项2',
                 label: '双皮奶'
-            }, {
-                value: '选项3',
-                label: '蚵仔煎'
-            }, {
-                value: '选项4',
-                label: '龙须面'
-            }, {
-                value: '选项5',
-                label: '北京烤鸭'
             }]
         }
     },

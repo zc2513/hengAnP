@@ -9,13 +9,18 @@
     </div>
     <div class="mt20 content-box">
       <div class="flsb">
-        <div class="bold">班级列表</div>
+        <div class="bold">课程列表</div>
         <div class="fontGay cursor">
           <span @click="btnsave($event)">新增课件</span>
         </div>
       </div>
       <tablePug class="mt15" :btns="btn" :lists="lists" :titles="titles" @sendVal="getVal" />
-      <page :total="total" :page-size="pageSize" @pagesend="getPageData" />
+      <page
+        :total="total"
+        :page-size="searchData.size"
+        @pagesend="getPageData"
+        @pagesizes="pagesizes"
+      />
     </div>
     <el-dialog
       :modal-append-to-body="false"
@@ -47,6 +52,8 @@ import search from './search'
 import page from '@/components/table/page'
 import datas from '@/assets/json/data'
 import addFrom from './add'
+// eslint-disable-next-line no-unused-vars
+import { selectcourse, delectecourse } from '@/api/curriculum'
 export default {
     name: 'Curriculum',
     components: { tablePug, page, search, addFrom },
@@ -59,8 +66,13 @@ export default {
                 src: ''
             },
             editData: null,
-            pageSize: 8,
             total: 0,
+            searchData: {// 搜索条件
+                manager_id: this.$store.getters.token,
+                size: 8,
+                page: 1
+            },
+            queryData: {}, // 查询条件
             lists: [],
             titles: [
                 { name: '序号', data: 'orderCode' },
@@ -78,7 +90,6 @@ export default {
                 btnlist: [
                     { con: '编辑', type: 'info' },
                     { con: '视频', type: 'primary' },
-                    // { con: '习题', type: 'primary' },
                     { con: '删除', type: 'warning', confirm: true }
                 ]
             }
@@ -87,8 +98,17 @@ export default {
     },
     created() {
         this.getPageData(1)
+        this.init()
     },
     methods: {
+        init() {
+            // 初始化页面数据
+            const data = {
+                ...this.searchData,
+                ...this.queryData
+            }
+            console.log(data)
+        },
         btnsave(e) {
             if (e.target.innerText === '新增课件') {
                 this.editData = null
@@ -97,9 +117,16 @@ export default {
                 this.$message(e.target.innerText)
             }
         },
-        getPageData(params) {
+        getPageData(params) { // 页数
+            this.searchData.page = params
+            this.init()
             this.total = datas.length
             this.lists = datas.slice((params - 1) * 8, params * 8)
+        },
+        pagesizes(num) { // 每页多少个并重置page为1
+            this.searchData.size = num
+            this.searchData.page = 1
+            this.init()
         },
         getVal(v) {
             if (v.type === '编辑') {
@@ -125,27 +152,23 @@ export default {
                     this.$message('暂无视频')
                 }
             }
-            if (v.type === '习题') {
-                this.$message(`${v.type}---待处理`)
-            }
             if (v.type === '删除') {
-                this.$confirm('是否在当前班级删除该学员?', '提示', {
+                this.$confirm('是否删除当前课件?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
                     this.$message('删除---待处理逻辑')
                 }).catch(() => {
-                    this.$message({
-                        type: 'info',
-                        message: '已取消删除'
-                    })
+                    this.$message.info('已取消删除')
                 })
                 return
             }
         },
         search(e) {
             console.log('搜索', e)
+            this.queryData = e
+            this.init()
         },
         handleClose(done) {
             if (this.loading) {

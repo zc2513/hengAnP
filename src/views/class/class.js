@@ -34,17 +34,13 @@ export default {
     watch: {
         searchData: {
             handler(v) {
-                if (this.$route.path !== '/class/recruitStudent/info') {
-                    this.init(v)
-                }
+                this.init(v)
             },
             deep: true
         }
     },
     created() {
-        if (this.$route.path !== '/class/recruitStudent/info') { // 详情不处理
-            this.init(this.searchData)
-        }
+        this.init(this.searchData)
     },
     methods: {
         getPageData(params) { // 页
@@ -67,6 +63,7 @@ export default {
                     item.endclass = this.$parseTime(item.endclass, '{y}-{m}-{d}')
                 }
                 this.lists = data.list
+                if (!data) this.$message.warning('暂无数据')
                 this.tableloading = false
             }).catch(() => { this.tableloading = false })
         },

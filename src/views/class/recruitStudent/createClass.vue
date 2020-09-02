@@ -167,7 +167,6 @@
 
 <script>
 import { phoneValidate } from '@/utils/validate'
-// eslint-disable-next-line no-unused-vars
 import { addclass, chapterlist, getKnotList, detailsclass, updateclass } from '@/api/class'
 import { getIndustryType } from '@/api/dic'
 export default {

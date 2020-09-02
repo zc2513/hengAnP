@@ -62,6 +62,8 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import { addcourse } from '@/api/curriculum'
 export default {
     props: {
         editData: {

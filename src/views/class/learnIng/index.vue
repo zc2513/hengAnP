@@ -54,7 +54,7 @@ export default {
             qrCodeSrc: '',
             btn: {
                 title: '操作',
-                width: '180',
+                width: '220',
                 btnlist: [
                     { con: '结业', type: 'success' },
                     { con: '详情', type: 'primary' },
@@ -71,8 +71,17 @@ export default {
         getBtn(v) {
             const { type, data } = v
             if (type === '结业') {
-                updateclass({ status: 2, id: data.id }).then(res => {
-                    console.log(res, '结业')
+                this.$confirm(`当前班级进度为${data.progress || 0}%?,是否确定结业`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    updateclass({ status: 2, id: data.id }).then(res => {
+                        this.$message.success('操作成功')
+                        this.init(this.searchData)
+                    })
+                }).catch(() => {
+                    this.$message.info('取消')
                 })
             }
             if (type === '详情') {
@@ -84,12 +93,8 @@ export default {
                     }
                 })
             }
-            if (type === '解散') {
-                this.dissolve(data)
-            }
-            if (type === '二维码') {
-                this.showQrCode(data)
-            }
+            if (type === '解散') this.dissolve(data)
+            if (type === '二维码') this.showQrCode(data)
         }
     }
 }

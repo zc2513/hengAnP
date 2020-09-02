@@ -86,7 +86,7 @@ export default {
             lists: [], // 展示数据
             tableloading: false, // 表格加载
             searchData: {// 搜索条件
-                manager_id: this.$store.getters.token,
+                // manager_id: this.$store.getters.token,
                 size: 8,
                 page: 1
                 // status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
