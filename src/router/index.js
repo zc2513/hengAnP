@@ -75,12 +75,6 @@ export const constantRoutes = [
         }]
     },
     {
-        path: '/upfile',
-        name: 'upfile',
-        component: () => import('@/views/demo/upfile/index'),
-        meta: { title: 'upfile', icon: 'table' }
-    },
-    {
         path: '/student',
         component: Layout,
         children: [{
@@ -96,6 +90,7 @@ export const constantRoutes = [
         component: Layout,
         redirect: '/demo/table',
         name: 'demo',
+        hidden: true,
         meta: { title: 'demo', icon: 'example' },
         children: [
             {
@@ -121,6 +116,12 @@ export const constantRoutes = [
                 name: 'Tree',
                 component: () => import('@/views/demo/tree/index'),
                 meta: { title: 'Tree', icon: 'tree' }
+            },
+            {
+                path: '/upfile',
+                name: 'upfile',
+                component: () => import('@/views/demo/upfile/index'),
+                meta: { title: 'upfile', icon: 'table' }
             }
         ]
     },

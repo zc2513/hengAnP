@@ -1,6 +1,6 @@
 <template>
   <!-- 创建班级 -->
-  <div v-loading="boxLoading" class="create-box" element-loading-text="页面数据加载中...">
+  <div v-loading="boxLoading" class="create-box" element-loading-text="这在加载原始数据...">
     <div class="content-box">
       <div class="flsb">
         <div class="bold">完善您的班级信息</div>
@@ -235,6 +235,7 @@ export default {
                 }
             ],
             chapters: [], // 章节列表
+            noArr: [], // 选中列表--只临时用于信息回显
             boxLoading: false
         }
     },
@@ -251,7 +252,8 @@ export default {
                 this.times = [startclass, endclass]
                 this.formData = res.data
                 this.formData['classid'] = classid
-                this.getChapterList(course.split(','))
+                this.noArr = course.split(',')
+                this.getChapterList()
             })
         },
         lazyLoad(node, resolve) { // 行业分类 加载项
@@ -325,7 +327,7 @@ export default {
             this.formData.startclass = time ? time[0] : ''
             this.formData.endclass = time ? time[1] : ''
         },
-        getChapterList(noArr = false) { // 获取章
+        getChapterList() { // 获取章
             this.chapters = []
             if (this.formData.types.length) {
                 this.isChapter = true
@@ -334,7 +336,7 @@ export default {
                     this.chapters = data
                     this.$nextTick(() => {
                         for (const item of data) { // 默认全选
-                            if (noArr && !(noArr.includes(item.id))) {
+                            if (this.noArr.length && !(this.noArr.includes(item.id))) {
                                 // ... 非选中处理
                             } else {
                                 this.$refs.refTable.toggleRowSelection(item)
