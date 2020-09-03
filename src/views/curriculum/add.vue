@@ -63,7 +63,7 @@
         <el-button size="mini" type="primary" @click="subData">确定</el-button>
       </div>
       <div>
-        <el-button size="mini">取 消</el-button>
+        <el-button size="mini" @click="$emit('close')">取 消</el-button>
       </div>
     </div>
   </div>
@@ -142,10 +142,8 @@ export default {
         subData() {
             console.log(this.formData)
             this.$refs.ruleForm.validate((valid) => {
-                console.log(valid, 111)
                 if (!valid) return
                 addcourse(this.formData).then(res => {
-                    console.log(res)
                     this.$message.success(res.msg)
                 })
             })

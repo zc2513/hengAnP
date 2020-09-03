@@ -49,7 +49,7 @@
       destroy-on-close
       direction="rtl"
     >
-      <addFrom :edit-data="editData" />
+      <addFrom ref="addFrom" :edit-data="editData" @close="editDialog=false" />
     </el-drawer>
 
   </div>
@@ -178,17 +178,13 @@ export default {
             this.init()
         },
         handleClose(done) {
-            console.log(this.editDialog)
-            this.$confirm('确定要提交表单吗？').then(_ => {
-                this.editDialog = true
-                this.timer = setTimeout(() => {
+            if (Object.values(this.$refs.addFrom.formData).some(e => !!e)) {
+                this.$confirm('表单存在尚未编辑完成的信息确认关闭吗?').then(_ => {
                     done()
-                    // 动画关闭需要一定的时间
-                    setTimeout(() => {
-                        this.editDialog = false
-                    }, 400)
-                }, 2000)
-            }).catch(_ => {})
+                }).catch(_ => {})
+            } else {
+                done()
+            }
         },
         closeVideo(done) {
             this.videoDialog.src = ''
