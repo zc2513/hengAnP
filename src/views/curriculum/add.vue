@@ -35,8 +35,8 @@
             :on-change="kjChange"
             accept="image/*"
           >
-            <img v-if="formData.url" :src="formData.url" class="avatar" width="360" height="180">
-            <i class="el-icon-upload" />
+            <img v-if="formData.url" :src="formData.url" class="avatar">
+            <i v-else class="el-icon-upload" />
             <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
             <p class="fontGay" style="height:14px;">建议上传尺寸 640*365</p>
           </el-upload>
@@ -52,7 +52,6 @@
         </el-form-item>
         <el-form-item label="视频上传" prop="videoId">
           <div class="videoBox">
-            <!-- <upVideo :video-id.sync="formData.videoId" /> -->
             <upVideo v-model="formData.videoId" />
           </div>
         </el-form-item>
@@ -145,6 +144,7 @@ export default {
                 if (!valid) return
                 addcourse(this.formData).then(res => {
                     this.$message.success(res.msg)
+                    this.$emit('success')
                 })
             })
         }
@@ -182,6 +182,12 @@ export default {
     }
     .videoBox{
         height:200px;
+    }
+    .el-upload-dragger{
+        img{
+            max-width: 100%;
+            max-height: 100%;
+        }
     }
 
 }

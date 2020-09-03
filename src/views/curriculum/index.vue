@@ -49,7 +49,7 @@
       destroy-on-close
       direction="rtl"
     >
-      <addFrom ref="addFrom" :edit-data="editData" @close="editDialog=false" />
+      <addFrom ref="addFrom" :edit-data="editData" @success="addRefresh" @close="editDialog=false" />
     </el-drawer>
 
   </div>
@@ -112,11 +112,14 @@ export default {
             const data = { ...this.searchData, ...this.queryData }
             console.log(data)
             selectcourse(data).then(res => {
-                console.log(res, 4444)
                 this.total = res.data.total
                 this.lists = res.data.list
                 this.tableloading = false
             }).catch(() => { this.tableloading = false })
+        },
+        addRefresh() { // 新增刷新
+            this.init()
+            this.editDialog = false
         },
         btnsave(e) {
             if (e.target.innerText === '新增课件') {
