@@ -6,8 +6,7 @@ const state = {
     token: getToken(),
     jgname: '',
     name: '',
-    logo: '',
-    classId: ''
+    logo: ''
 }
 
 const mutations = {
@@ -22,9 +21,6 @@ const mutations = {
     },
     SET_LOG: (state, logo) => {
         state.logo = logo
-    },
-    SET_CLASSID: (state, classId) => {
-        state.classId = classId
     }
 }
 
@@ -35,8 +31,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             login({ username: username.trim(), password: password }).then(response => {
                 const { data } = response
-                commit('SET_TOKEN', data.diy_id)
-                commit('SET_CLASSID', data.id)
+                commit('SET_TOKEN', data.id)
                 setToken(data.diy_id)
                 resolve()
             }).catch(error => {
@@ -76,7 +71,6 @@ const actions = {
                 commit('SET_JGNAME', '')
                 commit('SET_NAME', '')
                 commit('SET_LOG', '')
-                commit('SET_CLASSID', '')
                 removeToken()
                 resetRouter()
                 // 重置已访问的视图和缓存的视图

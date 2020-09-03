@@ -76,7 +76,7 @@ export default {
             editData: null,
             total: 0,
             searchData: {// 搜索条件
-                manager_id: this.$store.getters.classId,
+                manager_id: this.$store.getters.token,
                 size: 8,
                 page: 1
             },
