@@ -79,7 +79,7 @@ export function updateclass(data) {
 // 获取班级学员信息
 export function getStudents(data) {
     return request({
-        url: '/index.php/Master/User/index',
+        url: '/index.php/Master/User/userdiylist',
         method: 'post',
         data: qs.stringify(data)
     })

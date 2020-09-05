@@ -112,7 +112,6 @@ export default {
             // 初始化页面数据
             this.tableloading = true
             const data = { ...this.searchData, ...this.queryData }
-            console.log(data)
             selectcourse(data).then(res => {
                 this.total = res.data.total
                 this.lists = res.data.list
@@ -178,7 +177,6 @@ export default {
             }
         },
         search(e) {
-            console.log('搜索', e)
             this.queryData = e
             this.init()
         },

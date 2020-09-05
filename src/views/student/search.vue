@@ -4,10 +4,10 @@
       <el-input v-model="formData.name" clearable placeholder="学员姓名" />
     </el-form-item>
     <el-form-item label="身份证号">
-      <el-input v-model="formData.cardId" clearable placeholder="身份证号" />
+      <el-input v-model="formData.idcard" clearable placeholder="身份证号" />
     </el-form-item>
     <el-form-item label="手机号码">
-      <el-input v-model="formData.phone" clearable placeholder="手机号码" />
+      <el-input v-model="formData.phonenum" clearable placeholder="手机号码" />
     </el-form-item>
     <el-form-item>
       <el-button type="primary" style="width:100px;" round @click="onSubmit">搜索</el-button>
@@ -21,8 +21,8 @@ export default {
         return {
             formData: {
                 name: '',
-                cardId: '',
-                phone: ''
+                idcard: '',
+                phonenum: ''
             }
         }
     },

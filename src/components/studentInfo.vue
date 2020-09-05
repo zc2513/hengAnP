@@ -1,29 +1,29 @@
 <template>
-  <div>
+  <div v-loading="infoStatus" element-loading-text="页面数据加载中">
     <div class="lookTable">
       <div class="lookItem fl">
         <div>学员姓名</div>
-        <div>滕三锋</div>
+        <div>{{ user.name }}</div>
         <div>身份证号</div>
-        <div>XXXXXXXXXXXXXXXXXX</div>
+        <div>{{ user.idcard }}</div>
       </div>
       <div class="lookItem fl">
         <div>手机号码</div>
-        <div>13898765432</div>
+        <div>{{ user.phonenum }}</div>
         <div>模考成绩</div>
-        <div>92.00</div>
+        <div>{{ user.mkcj }}</div>
       </div>
       <div class="lookItem fl">
         <div>顺序联系进度</div>
-        <div>309/640</div>
+        <div>{{ user.sxlx }}</div>
         <div>完成课时</div>
-        <div>0/2</div>
+        <div>{{ user.ks }}</div>
       </div>
       <div class="lookItem fl">
         <div>模拟考试次数</div>
-        <div>80</div>
+        <div>{{ user.mkcs }}</div>
         <div>最高分数</div>
-        <div>97.00</div>
+        <div>{{ user.max_score }}</div>
       </div>
     <!-- <div class="lookItem fl">
           <div>学习进度</div>
@@ -32,21 +32,25 @@
     </div>
     <el-tabs v-if="$route.query.type !== 'recruitStudent'" v-model="activeName" class="mt20">
       <el-tab-pane label="模考记录" name="first">
-        <el-table :data="tableData" stripe max-height="270" border>
-          <el-table-column prop="date" label="序号" />
-          <el-table-column prop="name" label="考试分数" />
-          <el-table-column prop="address" label="考试用时（分：秒）" />
-          <el-table-column prop="date" label="考试时间" />
+        <el-table :data="examlist" stripe max-height="270" border>
+          <el-table-column prop="id" label="序号" />
+          <el-table-column prop="score" label="考试分数" />
+          <el-table-column prop="use_time" label="考试用时（分：秒）" />
+          <el-table-column label="考试时间">
+            <template slot-scope="{row}">
+              {{ $parseTime(row.shijian) }}
+            </template>
+          </el-table-column>
         </el-table>
       </el-tab-pane>
       <el-tab-pane label="视频学习" name="second">
-        <el-table :data="tableData" stripe max-height="270" border>
-          <el-table-column prop="date" label="序号" />
-          <el-table-column prop="name" label="课程" />
-          <el-table-column prop="address" label="课件学习时长" />
-          <el-table-column prop="date" label="学习图片">
-            <template>
-              <el-image style="width: 50px; height: 50px" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" :preview-src-list="srcList" />
+        <el-table :data="vediolist" stripe max-height="270" border>
+          <el-table-column prop="id" label="序号" />
+          <el-table-column prop="title" label="课程" />
+          <el-table-column prop="jindu" label="课件学习时长" />
+          <el-table-column prop="imgs" label="学习图片">
+            <template slot-scope="{row}">
+              <el-image style="width: 50px; height: 50px" :src="row.imgs[0]" :preview-src-list="srcList" @click="srcList = row.imgs" />
             </template>
           </el-table-column>
         </el-table>
@@ -56,46 +60,46 @@
 </template>
 
 <script>
+import { userdetails } from '@/api/student'
 export default {
+    props: {
+        studentId: {
+            type: [String, Number],
+            default: ''
+        }
+    },
     data() {
         return {
+            infoStatus: false,
             activeName: 'first',
-            tableData: [
-                {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-08',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-06',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-07',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
+            user: {},
+            examlist: [], // 模考记录
+            vediolist: [], // 视频记录
+            srcList: []// 展示列表
+        }
+    },
+    watch: {
+        studentId(v) {
+            this.init()
+        }
+    },
+    created() {
+        this.init()
+    },
+    methods: {
+        init() {
+            if (!this.studentId) return
+            this.infoStatus = true
+            userdetails({ id: this.studentId }).then(res => {
+                const { user, examlist, vediolist } = res
+                this.user = user
+                this.examlist = examlist
+                for (const item of vediolist) {
+                    item.imgs = item.imgs.split(',')
                 }
-            ],
-            srcList: [
-                'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-                'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg',
-                'https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg'
-            ]
+                this.vediolist = vediolist
+                this.infoStatus = false
+            }).catch(() => { this.infoStatus = false })
         }
     }
 }
