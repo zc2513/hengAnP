@@ -42,12 +42,14 @@
     </el-dialog>
     <el-drawer
       ref="drawer"
+      v-loading="editDialogStatus"
       :visible.sync="editDialog"
       :show-close="false"
       :with-header="false"
       :before-close="handleClose"
       destroy-on-close
       direction="rtl"
+      element-loading-text="加载中..."
     >
       <addFrom ref="addFrom" :edit-data="editData" @success="addRefresh" @close="editDialog=false" />
     </el-drawer>
@@ -61,13 +63,14 @@ import search from './search'
 import page from '@/components/table/page'
 import addFrom from './add'
 // eslint-disable-next-line no-unused-vars
-import { selectcourse, delectecourse } from '@/api/curriculum'
+import { selectcourse, delectecourse, detailscourse } from '@/api/curriculum'
 export default {
     name: 'Curriculum',
     components: { tablePug, page, search, addFrom },
     data() {
         return {
             editDialog: false,
+            editDialogStatus: false, // 回显加载状态
             videoDialog: {
                 type: false,
                 name: '',
@@ -99,7 +102,6 @@ export default {
                 ]
             },
             tableloading: false // 表格加载
-
         }
     },
     created() {
@@ -140,16 +142,13 @@ export default {
         },
         getVal({ data, type }) {
             if (type === '编辑') {
-                this.$message(`${type}---待处理`)
-                this.editData = {
-                    name: '张三看上了王老五',
-                    type: '双皮奶',
-                    teacher: '麻子',
-                    img: require('@/assets/a.jpg'),
-                    des: '打飞机可拉伸副科级大风基多拉荆防颗粒大姐夫两块的建安费枯鲁杜鹃阿夫林卡到数据'
-                }
                 this.editDialog = true
-                return
+                this.editDialogStatus = true
+                detailscourse({ id: data.id }).then(res => {
+                    res.data['id'] = data.id
+                    this.editData = res.data
+                    this.editDialogStatus = false
+                })
             }
             if (type === '视频') {
                 if (data.url) {
@@ -168,7 +167,10 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    this.$message('删除---待处理逻辑')
+                    delectecourse({ id: data.id }).then(res => {
+                        this.$message.success(res.msg)
+                        this.init()
+                    })
                 }).catch(() => {
                     this.$message.info('已取消删除')
                 })

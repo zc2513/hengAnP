@@ -9,10 +9,11 @@ import qs from 'qs'
 // $where['hours'] = I('hours ');
 // $where['logo'] = I('logo ');
 // $where['url'] = I('url ');
-// 新增课程
-export function addcourse(data) {
+
+// 新增/编辑课程
+export function addcourse(data, url) {
     return request({
-        url: '/index.php/Master/Course/addcourse',
+        url: `/index.php/Master/Course/${url}`,
         method: 'post',
         data: qs.stringify(data)
     })

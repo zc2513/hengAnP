@@ -20,6 +20,8 @@
 
 <script>
 import axios from 'axios'
+// eslint-disable-next-line no-unused-vars
+import { videoTranscoding, getVideoUrl } from '@/api/video'
 export default {
     data() {
         return {
@@ -30,7 +32,8 @@ export default {
                 retryCount: 3,
                 retryDuration: 2,
                 region: 'cn-shanghai',
-                userId: '1303984639806000'
+                userId: '1734297840212696'
+                // userId: '1303984639806000'
             },
             uploader: null,
             percentage: 0, // 进度
@@ -102,14 +105,19 @@ export default {
                 },
                 // 开始上传
                 onUploadstarted: (uploadInfo) => {
-                    const stsUrl = 'http://demo-vod.cn-shanghai.aliyuncs.com/voddemo/CreateSecurityToken?BusinessType=vodai&TerminalType=pc&DeviceModel=iPhone9,2&UUID=67999yyuuuy&AppVersion=1.0.0'
+                    const stsUrl = 'http://w.safetymf.com/index.php/Wechat/Upload/index?Videoname=测试数据啊&CoverURL=https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg&Description=我是描述信息'
                     axios.get(stsUrl).then((res) => { // 阿里云签名
+                        const { UploadAuth, UploadAddress, VideoId } = res.data
+                        uploader.setUploadAuthAndAddress(uploadInfo, UploadAuth, UploadAddress, VideoId)
+                        /*  sts形式
                         const { AccessKeySecret, SecurityToken, AccessKeyId } = res.data.SecurityTokenInfo
                         uploader.setSTSToken(uploadInfo, AccessKeyId, AccessKeySecret, SecurityToken)
+                        */
                     })
                 },
                 // 文件上传成功
                 onUploadSucceed: (uploadInfo) => {
+                    videoTranscoding(uploadInfo.videoId)
                     this.$emit('input', uploadInfo.videoId)
                     this.videoSrc = window.URL.createObjectURL(uploadInfo.file)
                 },

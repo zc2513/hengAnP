@@ -17,3 +17,16 @@ export function getIndustryType(params, type) {
         params
     })
 }
+
+/**
+ * @description 所属章节
+ * @author zc2513
+ * @date 2020-09-05
+ * @export
+ */
+export function getChapter() {
+    return request({
+        url: '/index.php/Master/Chapter/chapterlist',
+        method: 'get'
+    })
+}

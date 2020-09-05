@@ -1,6 +1,6 @@
 <template>
   <!-- 创建班级 -->
-  <div v-loading="boxLoading" class="create-box" element-loading-text="这在加载原始数据...">
+  <div v-loading="boxLoading" class="create-box" element-loading-text="正在加载原始数据...">
     <div class="content-box">
       <div class="flsb">
         <div class="bold">完善您的班级信息</div>
