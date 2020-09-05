@@ -46,7 +46,7 @@ import page from '@/components/table/page'
 import studentInfo from '@/components/studentInfo'
 import search from './search'
 
-import { getStudents } from '@/api/class'
+import { getStudents } from '@/api/student'
 export default {
     name: 'Student',
     components: { tablePug, search, page, studentInfo },

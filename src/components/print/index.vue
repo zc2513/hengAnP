@@ -91,7 +91,16 @@ export default {
                 }, 2000)
             }
         },
-        Print() {
+        // Print() {
+        //     const newstr = document.getElementsByClassName('print_box')[0].innerHTML
+        //     window.document.body.innerHTML = newstr
+        //     const oldstr = window.document.body.innerHTML
+        //     window.print()
+        //     window.location.reload() // 解决打印之后按钮失效的问题
+        //     window.document.body.innerHTML = oldstr
+        //     return false
+        // }
+        Print() { // 新页面
             const newstr = document.getElementsByClassName('print_box')[0].innerHTML
             window.document.body.innerHTML = newstr
             // const oldstr = window.document.body.innerHTML

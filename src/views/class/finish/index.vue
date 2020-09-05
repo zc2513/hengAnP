@@ -27,7 +27,7 @@
         @pagesizes="pagesizes"
       />
     </div>
-    <!-- <print v-if="printId" /> -->
+    <!-- <print v-if="printId" style="display:none;" /> -->
   </div>
 </template>
 
@@ -35,7 +35,7 @@
 import classMixin from './../class'
 // import print from '@/components/print'
 export default {
-    name: 'Home',
+    name: 'Finish',
     // components: { print },
     mixins: [classMixin],
     data() {
@@ -62,7 +62,7 @@ export default {
                 const routeData = this.$router.resolve({ path: '/dayin', query: { id: 1 }})
                 window.open(routeData.href, '_blank')
                 // this.printId = 1
-                this.$message(v.type)
+                // this.$message(v.type)
             }
         }
     }
