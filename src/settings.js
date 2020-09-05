@@ -1,6 +1,7 @@
 module.exports = {
 
     title: '恒安职业技能学习平台',
+    
     /**
    * @type {boolean} true | false
    * @description 是否固定视图容器导航栏
