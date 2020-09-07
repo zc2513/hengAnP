@@ -42,11 +42,9 @@ export default {
     },
     methods: {
         getVal(val) {
-            console.log(val)
             this.suninfo = val
         },
         getPageData(params) {
-            console.log('分页', params)
             this.suninfo = params
             this.lists = datas.slice((params - 1) * 8, params * 8)
         }

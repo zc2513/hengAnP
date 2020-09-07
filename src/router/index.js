@@ -141,6 +141,8 @@ const createRouter = () => new Router({
     routes: constantRoutes
 })
 
+export const asyncRoutes = []
+
 const router = createRouter()
 
 export function resetRouter() {

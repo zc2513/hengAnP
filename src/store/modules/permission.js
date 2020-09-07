@@ -1,6 +1,7 @@
 // 权限控制
 import { asyncRoutes, constantRoutes } from '@/router'
-
+import * as routers from '@/router'
+console.log(routers, 111111)
 /**
  * 使用meta.role确定当前用户是否具有权限
  * @param roles

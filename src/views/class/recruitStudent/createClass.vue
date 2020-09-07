@@ -365,7 +365,6 @@ export default {
                 for (const item of this.chapters) {
                     if (item.id === id) {
                         getKnotList({ id }).then(res => {
-                            console.log(res, 444444)
                             item['children'] = res.data
                             this.isChildren = false
                         }).catch(() => {
