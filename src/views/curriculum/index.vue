@@ -113,7 +113,7 @@ export default {
             this.tableloading = true
             const data = { ...this.searchData, ...this.queryData }
             selectcourse(data).then(res => {
-                this.total = res.data.total
+                this.total = Number(res.data.total)
                 this.lists = res.data.list
                 this.tableloading = false
             }).catch(() => { this.tableloading = false })

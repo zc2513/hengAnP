@@ -1,11 +1,11 @@
 {
-  "name": "henganPc",
+  "name": "hengan",
   "version": "1.0.0",
   "description": "hengan",
   "author": "yyzc2513@163.com",
   "scripts": {
     "dev": "vue-cli-service serve",
-    "build:prod": "vue-cli-service build --mode development",
+    "build": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging --dest sdist",
     "preview": "node build/index.js --preview",
     "lint": "eslint --fix --ext .js,.vue src",
