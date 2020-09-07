@@ -32,13 +32,15 @@
       />
     </div>
     <el-dialog
+      v-if="videoDialog.type"
       :modal-append-to-body="false"
       custom-class="videoDialog-box"
       :visible.sync="videoDialog.type"
       :before-close="closeVideo"
     >
       <template #title>{{ videoDialog.name }} </template>
-      <video autoplay controlsList="nodownload" controls :src="videoDialog.src" />
+      <!-- <video autoplay controlsList="nodownload" controls :src="videoDialog.src" /> -->
+      <div id="J_prismPlayer" class="prism-player" />
     </el-dialog>
     <el-drawer
       ref="drawer"
@@ -64,6 +66,7 @@ import page from '@/components/table/page'
 import addFrom from './add'
 // eslint-disable-next-line no-unused-vars
 import { selectcourse, delectecourse, detailscourse } from '@/api/curriculum'
+import { player } from '@/utils/video'
 export default {
     name: 'Curriculum',
     components: { tablePug, page, search, addFrom },
@@ -156,6 +159,9 @@ export default {
                         name: data.title,
                         src: data.url
                     }
+                    this.$nextTick(() => {
+                        player({ source: data.url, cover: data.logo }, 'J_prismPlayer')
+                    })
                 } else {
                     this.$message('暂无视频')
                 }

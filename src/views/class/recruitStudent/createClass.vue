@@ -159,7 +159,8 @@
       </el-form>
       <el-dialog :modal-append-to-body="false" :visible.sync="dialogTableVisible" :before-close="handleClose">
         <template #title>{{ video.name }} </template>
-        <video autoplay controlsList="nodownload" controls :src="video.src" />
+        <!-- <video autoplay controlsList="nodownload" controls :src="video.src" /> -->
+        <div id="J_prismPlayer" class="prism-player" />
       </el-dialog>
     </div>
   </div>
@@ -169,6 +170,7 @@
 import { phoneValidate } from '@/utils/validate'
 import { addclass, chapterlist, getKnotList, detailsclass, updateclass } from '@/api/class'
 import { getIndustryType } from '@/api/dic'
+import { player } from '@/utils/video'
 export default {
     data() {
         return {
@@ -312,6 +314,11 @@ export default {
                 name: row.title || '暂无标题',
                 src: row.url
             }
+            this.$nextTick(() => {
+                this.$nextTick(() => {
+                    player({ source: row.url, cover: row.logo }, 'J_prismPlayer')
+                })
+            })
             this.dialogTableVisible = true
         },
         handleClose(done) { // 关闭视频弹窗

@@ -90,7 +90,7 @@ export const constantRoutes = [
         component: Layout,
         redirect: '/demo/table',
         name: 'demo',
-        hidden: true,
+        // hidden: true,
         meta: { title: 'demo', icon: 'example' },
         children: [
             {
@@ -122,6 +122,12 @@ export const constantRoutes = [
                 name: 'upfile',
                 component: () => import('@/views/demo/upfile/index'),
                 meta: { title: 'upfile', icon: 'table' }
+            },
+            {
+                path: '/video',
+                name: 'video',
+                component: () => import('@/views/demo/video/index'),
+                meta: { title: 'video', icon: 'table' }
             }
         ]
     },
