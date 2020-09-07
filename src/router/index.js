@@ -138,9 +138,10 @@ export const constantRoutes = [
 const createRouter = () => new Router({
     // mode: 'history',  // 需要后端开启服务支持
     scrollBehavior: () => ({ y: 0 }),
-    asyncRoutes: [],
     routes: constantRoutes
 })
+
+export const asyncRoutes = []
 
 const router = createRouter()
 
