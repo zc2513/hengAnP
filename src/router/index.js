@@ -75,6 +75,16 @@ export const constantRoutes = [
         }]
     },
     {
+        path: '/recommend',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'recommend',
+            component: () => import('@/views/recommend/index'),
+            meta: { title: '推荐课程', icon: 'curriculum' }
+        }]
+    },
+    {
         path: '/student',
         component: Layout,
         children: [{
