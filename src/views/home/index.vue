@@ -120,6 +120,10 @@ export default {
             }
             selectclass(data).then(res => {
                 this.lists = res.data.list
+                for (const item of res.data.list) {
+                    item.startclass = this.$parseTime(item.startclass, '{y}-{m}-{d}')
+                    item.endclass = this.$parseTime(item.endclass, '{y}-{m}-{d}')
+                }
             })
         },
         btnsave(e) {
