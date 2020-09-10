@@ -73,7 +73,29 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
+           <el-col class="mb10" :span="12">
+            <el-form-item label="初训复训" prop="type5_id">
+              <template>
+                  <el-radio v-model="formData.type5_id" label="初训">初训</el-radio>
+                  <el-radio v-model="formData.type5_id" label="复训">复训</el-radio>
+              </template>
+              </el-form-item>
+          </el-col>
+          <el-col class="mb10" :span="12">
+               <el-form-item label="题库地区" prop="type6_id">
+                  <template>
+                      <el-select v-model="formData.type6_id" placeholder="请选择">
+                        <el-option
+                          v-for="item in area"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </template>
+                   </el-form-item>  
+          </el-col>
+         </el-row>
         <div class="mt20">
           <div class="bold">已选课时（{{ chapters.length }}）</div>
           <div class="table-list">
@@ -197,7 +219,9 @@ export default {
                 classnum: '', // 报名人数
                 startclass: '', // 开始时间
                 endclass: '', // 结束时间
-                course: []// 已选课程
+                course: [],// 已选课程
+                type5_id:"初训",
+                type6_id: ''
             },
             rules: {
                 classname: [
@@ -236,6 +260,25 @@ export default {
                     label: '面授'
                 }
             ],
+            area: [{
+                  value: '浙江省',
+                  label: '浙江省'
+                }, {
+                  value: '安徽省',
+                  label: '安徽省'
+                }, {
+                  value: '江苏省',
+                  label: '江苏省'
+                }, {
+                  value: '河北省',
+                  label: '河北省'
+                }, {
+                  value: '山西省',
+                  label: '山西省'
+                }, {
+                  value: '新疆维吾尔自治区',
+                  label: '新疆维吾尔自治区'
+                }],
             chapters: [], // 章节列表
             noArr: [], // 选中列表--只临时用于信息回显
             boxLoading: false
