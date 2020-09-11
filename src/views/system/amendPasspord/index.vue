@@ -8,9 +8,9 @@
       label-width="100px"
       :rules="rules"
     >
-      <el-form-item label="用户姓名" prop="name">
+      <!-- <el-form-item label="用户姓名" prop="name">
         <el-input v-model="user.name" readonly />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="原始密码" prop="password">
         <el-input v-model="user.password" placeholder="请输入原始密码" />
       </el-form-item>
@@ -62,8 +62,7 @@ export default {
         return {
             loading: false,
             user: {// 新增/编辑科技
-                manager_id: this.$store.getters.classId,
-                name: this.$store.getters.name,
+                manager_id: this.$store.getters.token,
                 password: '',
                 newpassword: '',
                 checkPass: ''

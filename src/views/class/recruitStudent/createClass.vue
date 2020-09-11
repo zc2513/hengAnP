@@ -39,13 +39,26 @@
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="行业" prop="types">
+            <!-- <el-form-item label="行业" prop="types">
               <el-cascader
                 ref="refTypes"
                 v-model="formData.types"
                 placeholder="请选择"
                 :props="{lazy:true,lazyLoad}"
                 @change="getChapterList"
+              />
+            </el-form-item> -->
+
+            <el-form-item label="开学日期" prop="startclass">
+              <el-date-picker
+                v-model="times"
+                type="daterange"
+                value-format="timestamp"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                :picker-options="pickerOptions0"
+                @change="changeDate"
               />
             </el-form-item>
           </el-col>
@@ -60,7 +73,7 @@
             </el-form-item>
           </el-col>
           <el-col class="mb10" :span="12">
-            <el-form-item label="开学日期" prop="startclass">
+            <!-- <el-form-item label="开学日期" prop="startclass">
               <el-date-picker
                 v-model="times"
                 type="daterange"
@@ -71,8 +84,17 @@
                 :picker-options="pickerOptions0"
                 @change="changeDate"
               />
+            </el-form-item> -->
+            <el-form-item label="行业" prop="types">
+              <el-cascader
+                ref="refTypes"
+                v-model="formData.types"
+                placeholder="请选择"
+                :props="{lazy:true,lazyLoad}"
+                @change="getChapterList"
+              />
             </el-form-item>
-          </el-col>
+           </el-col>
            <el-col class="mb10" :span="12">
             <el-form-item label="初训复训" prop="type5_id">
               <template>
