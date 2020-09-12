@@ -193,7 +193,6 @@
                 </template>
               </el-table-column> -->
             </el-table>
-
           </div>
         </div>
         <el-form-item v-if="$route.query.type === 'edit'" class="t-c wfull mt20">
@@ -324,7 +323,8 @@ export default {
             this.boxLoading = true
             detailsclass({ id }).then(res => {
                 const { classid, startclass, endclass, course } = res.data
-                this.times = [startclass, endclass]
+
+                this.times = [Number(startclass) * 1000, Number(endclass) * 1000]
                 this.formData = res.data
                 this.formData['classid'] = classid
                 this.noArr = course.split(',')
