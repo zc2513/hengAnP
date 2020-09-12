@@ -98,10 +98,10 @@
           <el-col class="mb10" :span="12">
             <el-form-item label="初训复训" prop="type5_id">
               <template>
-                  <el-radio-group v-model="formData.type5_id">
-                    <el-radio  label="初训">初训</el-radio>
-                    <el-radio  label="复审">复审</el-radio>
-                    <el-radio  label="换证">换证</el-radio>
+                <el-radio-group v-model="formData.type5_id">
+                  <el-radio label="初训">初训</el-radio>
+                  <el-radio label="复审">复审</el-radio>
+                  <el-radio label="换证">换证</el-radio>
                 </el-radio-group>
               </template>
             </el-form-item>
@@ -286,29 +286,29 @@ export default {
                 }
             ],
             area: [
-             {
-                value: '国家题库',
-                label: '国家题库'
-             },
-             {
-                value: '浙江省',
-                label: '浙江省'
-            }, {
-                value: '安徽省',
-                label: '安徽省'
-            }, {
-                value: '江苏省',
-                label: '江苏省'
-            }, {
-                value: '河北省',
-                label: '河北省'
-            }, {
-                value: '山西省',
-                label: '山西省'
-            }, {
-                value: '新疆维吾尔自治区',
-                label: '新疆维吾尔自治区'
-            }],
+                {
+                    value: '国家题库',
+                    label: '国家题库'
+                },
+                {
+                    value: '浙江省',
+                    label: '浙江省'
+                }, {
+                    value: '安徽省',
+                    label: '安徽省'
+                }, {
+                    value: '江苏省',
+                    label: '江苏省'
+                }, {
+                    value: '河北省',
+                    label: '河北省'
+                }, {
+                    value: '山西省',
+                    label: '山西省'
+                }, {
+                    value: '新疆维吾尔自治区',
+                    label: '新疆维吾尔自治区'
+                }],
             chapters: [], // 章节列表
             noArr: [], // 选中列表--只临时用于信息回显
             boxLoading: false

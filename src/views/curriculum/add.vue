@@ -13,16 +13,16 @@
         <el-form-item label="课件名称" prop="title">
           <el-input v-model="formData.title" />
         </el-form-item>
-        <!-- <el-form-item label="所属行业" prop="chapter_id">
+        <el-form-item label="所属行业" prop="types">
           <el-cascader
-                ref="refTypes"
-                v-model="formData.types"
-                placeholder="请选择"
-                :props="{lazy:true,lazyLoad}"
-                @change="getChapterList"
-              />
-        </el-form-item> -->
-        <el-form-item label="所属章节" prop="chapter_id">
+            ref="refTypes"
+            v-model="formData.types"
+            placeholder="请选择行业"
+            :props="{lazy:true,lazyLoad}"
+            @change="getChapterList"
+          />
+        </el-form-item>
+        <el-form-item v-if="chapters.length" label="所属章节" prop="chapter_id">
           <el-select v-model="formData.chapter_id" filterable placeholder="请选择">
             <el-option
               v-for="item in chapters"
@@ -80,10 +80,10 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import { getChapter } from '@/api/dic'
-// eslint-disable-next-line no-unused-vars
 import { addcourse, updatecourse } from '@/api/curriculum'
 import upVideo from '@/components/upVideo'
+import { getIndustryType } from '@/api/dic'
+import { chapterlist } from '@/api/class'
 export default {
     components: { upVideo },
     props: {
@@ -99,7 +99,7 @@ export default {
             fileList: [],
             formData: {// 新增/编辑科技
                 title: '',
-                chapter_id: '',
+                chapter_id: '', // 所属节
                 teacher: '',
                 types: [], // 行业选择
                 logo: '',
@@ -109,6 +109,9 @@ export default {
             rules: {
                 title: [
                     { required: true, message: '课件名称不能为空', trigger: 'blur' }
+                ],
+                types: [
+                    { required: true, message: '请选择行业', trigger: ['blur', 'change'] }
                 ],
                 chapter_id: [
                     { required: true, message: '请选当前课件所属的章', trigger: 'change' }
@@ -126,7 +129,8 @@ export default {
                     { required: true, message: '请上传视频', trigger: ['change', 'blur'] }
                 ]
             },
-            chapters: []
+            chapters: [],
+            boxLoading: false // 页面加载
         }
     },
     watch: {
@@ -142,16 +146,12 @@ export default {
             immediate: true
         }
     },
-    created() {
-        getChapter().then(res => {
-            this.chapters = res.data
-        })
-    },
     methods: {
         subData() {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return
                 this.formData['manager_id'] = this.$store.getters.token
+
                 let url = 'addcourse'
                 if (this.pageType === 'edit') url = 'updatecourse'
                 addcourse(this.formData, url).then(res => {
@@ -163,6 +163,39 @@ export default {
         },
         upfileSuccess(res, file) {
             this.formData.logo = `http://henganupload.oss-cn-beijing.aliyuncs.com/${res.data}`
+        },
+        lazyLoad(node, resolve) { // 行业分类 加载项
+            const { level } = node
+            const url = level + 1
+            const params = {}
+            if (level) { params['id'] = node.value }
+            let nodes = []
+            getIndustryType(params, url).then(res => {
+                nodes = res.data.map(item => {
+                    if (level === 3) this.boxLoading = false
+                    return {
+                        value: item.id,
+                        label: item.name,
+                        leaf: !item.status
+                    }
+                })
+                resolve(nodes)
+            }).catch(() => {
+                this.boxLoading = false
+                resolve(nodes)
+            })
+        },
+        getChapterList() { // 获取章
+            this.chapters = []
+            if (this.formData.types.length) {
+                chapterlist({ types: this.formData.types }).then(res => {
+                    const { data } = res
+                    console.log(res, 454545)
+                    this.chapters = data
+                }).catch(() => {
+                    this.chapters = []
+                })
+            }
         }
     }
 
@@ -208,6 +241,9 @@ export default {
             max-width: 100%;
             max-height: 100%;
         }
+    }
+    .el-select,.el-cascader{
+        width: 100%;
     }
 
 }

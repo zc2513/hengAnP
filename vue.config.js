@@ -25,8 +25,8 @@ module.exports = {
         },
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                // target: 'http://w.safetymf.com',
-                target: 'http://m.safetymf.com',
+                target: 'http://w.safetymf.com',
+                // target: 'http://m.safetymf.com',
                 changeOrigin: true,
                 pathRewrite: {
                     ['^' + process.env.VUE_APP_BASE_API]: ''

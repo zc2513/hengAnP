@@ -51,6 +51,7 @@
       :before-close="handleClose"
       destroy-on-close
       direction="rtl"
+      size="35%"
       element-loading-text="加载中..."
     >
       <addFrom ref="addFrom" :edit-data="editData" @success="addRefresh" @close="editDialog=false" />
