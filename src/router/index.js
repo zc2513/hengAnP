@@ -74,16 +74,16 @@ export const constantRoutes = [
             meta: { title: '课程管理', icon: 'curriculum' }
         }]
     },
-    {
-        path: '/recommend',
-        component: Layout,
-        children: [{
-            path: '',
-            name: 'recommend',
-            component: () => import('@/views/recommend/index'),
-            meta: { title: '推荐课程', icon: 'curriculum' }
-        }]
-    },
+    // {
+    //     path: '/recommend',
+    //     component: Layout,
+    //     children: [{
+    //         path: '',
+    //         name: 'recommend',
+    //         component: () => import('@/views/recommend/index'),
+    //         meta: { title: '推荐课程', icon: 'curriculum' }
+    //     }]
+    // },
     {
         path: '/student',
         component: Layout,

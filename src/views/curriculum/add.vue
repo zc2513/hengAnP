@@ -13,6 +13,15 @@
         <el-form-item label="课件名称" prop="title">
           <el-input v-model="formData.title" />
         </el-form-item>
+        <!-- <el-form-item label="所属行业" prop="chapter_id">
+          <el-cascader
+                ref="refTypes"
+                v-model="formData.types"
+                placeholder="请选择"
+                :props="{lazy:true,lazyLoad}"
+                @change="getChapterList"
+              />
+        </el-form-item> -->
         <el-form-item label="所属章节" prop="chapter_id">
           <el-select v-model="formData.chapter_id" filterable placeholder="请选择">
             <el-option
@@ -92,6 +101,7 @@ export default {
                 title: '',
                 chapter_id: '',
                 teacher: '',
+                types: [], // 行业选择
                 logo: '',
                 content: '',
                 video_id: ''

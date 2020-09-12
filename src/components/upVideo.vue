@@ -105,7 +105,7 @@ export default {
                 },
                 // 开始上传
                 onUploadstarted: (uploadInfo) => {
-                    const stsUrl = 'http://w.safetymf.com/index.php/Wechat/Upload/index?Videoname=测试数据啊&CoverURL=https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg&Description=我是描述信息'
+                    const stsUrl = 'http://m.safetymf.com/index.php/Wechat/Upload/index?Videoname=测试数据啊&CoverURL=https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg&Description=我是描述信息'
                     axios.get(stsUrl).then((res) => { // 阿里云签名
                         const { UploadAuth, UploadAddress, VideoId } = res.data
                         uploader.setUploadAuthAndAddress(uploadInfo, UploadAuth, UploadAddress, VideoId)

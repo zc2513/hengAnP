@@ -98,8 +98,11 @@
           <el-col class="mb10" :span="12">
             <el-form-item label="初训复训" prop="type5_id">
               <template>
-                <el-radio v-model="formData.type5_id" label="初训">初训</el-radio>
-                <el-radio v-model="formData.type5_id" label="复训">复训</el-radio>
+                  <el-radio-group v-model="formData.type5_id">
+                    <el-radio  label="初训">初训</el-radio>
+                    <el-radio  label="复审">复审</el-radio>
+                    <el-radio  label="换证">换证</el-radio>
+                </el-radio-group>
               </template>
             </el-form-item>
           </el-col>
@@ -282,7 +285,12 @@ export default {
                     label: '面授'
                 }
             ],
-            area: [{
+            area: [
+             {
+                value: '国家题库',
+                label: '国家题库'
+             },
+             {
                 value: '浙江省',
                 label: '浙江省'
             }, {
