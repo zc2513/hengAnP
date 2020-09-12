@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer-box">
+  <div v-loading="boxLoading" class="drawer-box">
     <h4 v-if="pageType === 'edit'">编辑课件</h4>
     <h4 v-if="pageType === 'add'">新增课件</h4>
     <div class="drawer-from">
