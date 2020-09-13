@@ -320,7 +320,6 @@ export default {
             this.boxLoading = true
             detailsclass({ id }).then(res => {
                 const { classid, startclass, endclass, course } = res.data
-
                 this.times = [Number(startclass) * 1000, Number(endclass) * 1000]
                 this.formData = res.data
                 this.formData['classid'] = classid

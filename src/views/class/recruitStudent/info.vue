@@ -212,7 +212,7 @@ export default {
                 return
             }
             if (type === '打印课时') {
-                const routeData = this.$router.resolve({ path: '/dayin', query: { id: 1 }})
+                const routeData = this.$router.resolve({ path: '/dayin', query: { id: data.id }})
                 window.open(routeData.href, '_blank')
             }
         },

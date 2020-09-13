@@ -58,11 +58,10 @@ export default {
         getBtn(v) {
             if (v.type === '详情') {
                 this.$router.push('/class/recruitStudent/info?type=finish')
-            } else {
-                const routeData = this.$router.resolve({ path: '/dayin', query: { id: 1 }})
+            }
+            if (v.type === '打印课时') {
+                const routeData = this.$router.resolve({ path: '/dayin', query: { class_id: v.data.classid }})
                 window.open(routeData.href, '_blank')
-                // this.printId = 1
-                // this.$message(v.type)
             }
         }
     }

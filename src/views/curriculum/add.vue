@@ -168,13 +168,6 @@ export default {
         }
     },
     methods: {
-        inif() {
-            // detailscourse({ id: data.id }).then(res => {
-            //     res.data['id'] = data.id
-            //     this.editData = res.data
-            //     this.editDialogStatus = false
-            // })
-        },
         subData() {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return

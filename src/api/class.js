@@ -87,3 +87,10 @@ export function delclass(data) {
 // 二维码
 // http://w.safetymf.com/index.php/Master/Qrcode/index?id=12&classid=39
 
+export function getPrint(data) {
+    return request({
+        url: '/index.php/Master/User/userclassdetails',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
