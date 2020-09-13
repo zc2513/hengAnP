@@ -28,7 +28,7 @@
           </el-col>
           <el-col class="mb10" :span="12">
             <el-form-item label="授课方式" prop="way">
-              <el-select v-model="formData.way" placeholder="请选择">
+              <el-select v-model="formData.way" disabled placeholder="请选择">
                 <el-option
                   v-for="item in options"
                   :key="item.value"
@@ -279,9 +279,6 @@ export default {
                 {
                     value: '网授',
                     label: '网授'
-                }, {
-                    value: '面授',
-                    label: '面授'
                 }
             ],
             area: [
