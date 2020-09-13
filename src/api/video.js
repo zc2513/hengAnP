@@ -63,3 +63,19 @@ export function getVideoUrl(videoId) {
         params: { videoId }
     })
 }
+
+/**
+ * @description 视频上传
+ * @author zc2513
+ * @date 2020-09-13
+ * @export
+ * @param {*} data
+ * @returns
+ */
+export function upfileVideoApi(params) {
+    return request({
+        url: '/index.php/Wechat/Upload/index',
+        method: 'get',
+        params: qs.stringify(params)
+    })
+}

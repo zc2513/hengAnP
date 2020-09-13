@@ -33,7 +33,6 @@ export default {
                 retryDuration: 2,
                 region: 'cn-shanghai',
                 userId: '1734297840212696'
-                // userId: '1303984639806000'
             },
             uploader: null,
             percentage: 0, // 进度
@@ -105,8 +104,14 @@ export default {
                 },
                 // 开始上传
                 onUploadstarted: (uploadInfo) => {
-                    const stsUrl = 'http://m.safetymf.com/index.php/Wechat/Upload/index?Videoname=测试数据啊&CoverURL=https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg&Description=我是描述信息'
-                    axios.get(stsUrl).then((res) => { // 阿里云签名
+                    const stsUrl = 'http://w.safetymf.com/index.php/Wechat/Upload/index'
+
+                    const params = {
+                        Videoname: '测试数据啊',
+                        CoverURL: 'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg',
+                        Description: '我是描述信息'
+                    }
+                    axios.get(stsUrl, { params }).then((res) => { // 阿里云签名
                         const { UploadAuth, UploadAddress, VideoId } = res.data
                         uploader.setUploadAuthAndAddress(uploadInfo, UploadAuth, UploadAddress, VideoId)
                         /*  sts形式

@@ -22,7 +22,7 @@
             @change="getChapterList"
           />
         </el-form-item>
-        <el-form-item v-if="chapters.length" label="所属章节" prop="chapter_id">
+        <el-form-item label="所属章节" prop="chapter_id">
           <el-select v-model="formData.chapter_id" filterable placeholder="请选择">
             <el-option
               v-for="item in chapters"
@@ -131,6 +131,11 @@ export default {
             },
             chapters: [],
             boxLoading: false // 页面加载
+        }
+    },
+    computed: {
+        isUp() {
+            return false
         }
     },
     watch: {

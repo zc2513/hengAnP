@@ -86,7 +86,7 @@ export default {
 
         showQrCode(data) { // 二维码展示
             this.qrCodesType = true
-            this.qrCodeSrc = `http://w.safetymf.com/index.php/Master/Qrcode/index?calssid=${data.id}&managerid=${this.$store.getters.token}`
+            this.qrCodeSrc = `http://w.safetymf.com/index.php/Master/Qrcode/index?classid=${data.id}&managerid=${this.$store.getters.token}`
         }
 
     }
