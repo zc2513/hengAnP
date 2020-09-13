@@ -94,6 +94,16 @@ export const constantRoutes = [
             meta: { title: '学员管理', icon: 'student' }
         }]
     },
+    {
+        path: '/enroll',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'enroll',
+            component: () => import('@/views/enroll/index'),
+            meta: { title: '报名列表', icon: 'enroll' }
+        }]
+    },
     system,
     // {
     //     path: '/demo',

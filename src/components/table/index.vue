@@ -139,43 +139,7 @@ export default {
         btns: {
             type: Object,
             default: function() {
-                return {// ----------------------------按钮项配置/不传则不展示
-                    title: '操作',
-                    width: '200', // 按钮项宽度
-                    btnlist: [
-                        {
-                            icon: 'el-icon-zoom-in', // 使用字体图标为按钮
-                            circle: true, // 控制按钮是否为圆形   false/true  默认false
-                            type: 'primary', // 按钮模式
-                            size: 'small', // 按钮大小medium / small / mini 默认为mini
-                            style: {
-                                color: '#fff', // 文字颜色
-                                backgroundColor: '#e2e2e2', // 按钮背景色
-                                borderColor: '#e2e2e2'
-                            }
-                        },
-                        {
-                            con: '详情',
-                            type: 'success',
-                            style: {
-                                color: '#fff',
-                                backgroundColor: '#f00',
-                                borderColor: '#f00'
-                            }
-                        },
-                        {
-                            con: '共存',
-                            icon: 'el-icon-check',
-                            type: 'primary',
-                            size: 'small',
-                            style: {
-                                color: '#00c',
-                                backgroundColor: '#999',
-                                borderColor: '#999'
-                            }
-                        }
-                    ]
-                }
+                return {}
             }
         }
     },

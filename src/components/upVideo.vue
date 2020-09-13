@@ -23,6 +23,12 @@ import axios from 'axios'
 // eslint-disable-next-line no-unused-vars
 import { videoTranscoding, getVideoUrl } from '@/api/video'
 export default {
+    props: {
+        sendData: {
+            type: Object,
+            default: _ => {}
+        }
+    },
     data() {
         return {
             configOptions: { // 视频配置项
@@ -105,13 +111,7 @@ export default {
                 // 开始上传
                 onUploadstarted: (uploadInfo) => {
                     const stsUrl = 'http://w.safetymf.com/index.php/Wechat/Upload/index'
-
-                    const params = {
-                        Videoname: '测试数据啊',
-                        CoverURL: 'https://dss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2534506313,1688529724&fm=26&gp=0.jpg',
-                        Description: '我是描述信息'
-                    }
-                    axios.get(stsUrl, { params }).then((res) => { // 阿里云签名
+                    axios.get(stsUrl, { params: { ...this.sendData }}).then((res) => { // 阿里云签名
                         const { UploadAuth, UploadAddress, VideoId } = res.data
                         uploader.setUploadAuthAndAddress(uploadInfo, UploadAuth, UploadAddress, VideoId)
                         /*  sts形式

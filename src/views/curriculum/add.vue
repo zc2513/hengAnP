@@ -60,9 +60,12 @@
           />
         </el-form-item>
         <el-form-item label="视频上传" prop="video_id">
-          <div class="videoBox">
-            <upVideo v-if="!formData.url" v-model="formData.video_id" />
+          <div v-if="isUp" class="videoBox">
+            <upVideo v-if="!formData.url" v-model="formData.video_id" :send-data="{Videoname:formData.title,CoverURL:formData.logo,Description:formData.content}" />
             <video v-else controls :src="formData.url" />
+          </div>
+          <div v-else style="color: #F00;">
+            请输入课件名称，封面图片，描述信息后上传视频
           </div>
         </el-form-item>
       </el-form>
@@ -102,7 +105,7 @@ export default {
                 chapter_id: '', // 所属节
                 teacher: '',
                 types: [], // 行业选择
-                logo: '',
+                logo: 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
                 content: '',
                 video_id: ''
             },
@@ -135,7 +138,8 @@ export default {
     },
     computed: {
         isUp() {
-            return false
+            const { title, content, logo, chapter_id, teacher } = this.formData
+            return title && content && logo && chapter_id && teacher
         }
     },
     watch: {
