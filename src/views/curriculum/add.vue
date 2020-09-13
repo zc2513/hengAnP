@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="boxLoading" class="drawer-box">
+  <div v-loading="boxLoading" class="drawer-box" element-loading-text="正在加载行业数据">
     <h4 v-if="pageType === 'edit'">编辑课件</h4>
     <h4 v-if="pageType === 'add'">新增课件</h4>
     <div class="drawer-from">
@@ -12,6 +12,15 @@
       >
         <el-form-item label="课件名称" prop="title">
           <el-input v-model="formData.title" />
+        </el-form-item>
+        <el-form-item label="初训复训" prop="type5_id">
+          <template>
+            <el-radio-group v-model="formData.type5_id">
+              <el-radio label="初训">初训</el-radio>
+              <el-radio label="复审">复审</el-radio>
+              <el-radio label="换证">换证</el-radio>
+            </el-radio-group>
+          </template>
         </el-form-item>
         <el-form-item label="所属行业" prop="types">
           <el-cascader
@@ -105,8 +114,9 @@ export default {
                 chapter_id: '', // 所属节
                 teacher: '',
                 types: [], // 行业选择
-                logo: 'https://dss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1906469856,4113625838&fm=26&gp=0.jpg',
+                logo: '',
                 content: '',
+                type5_id: '初训',
                 video_id: ''
             },
             rules: {
@@ -147,7 +157,9 @@ export default {
             handler(v) {
                 if (v) {
                     this.pageType = 'edit'
+                    v.types = v.typesstr.split(',')
                     this.formData = v
+                    this.getChapterList()
                 } else {
                     this.pageType = 'add'
                 }
@@ -156,11 +168,18 @@ export default {
         }
     },
     methods: {
+        inif() {
+            // detailscourse({ id: data.id }).then(res => {
+            //     res.data['id'] = data.id
+            //     this.editData = res.data
+            //     this.editDialogStatus = false
+            // })
+        },
         subData() {
             this.$refs.ruleForm.validate((valid) => {
                 if (!valid) return
                 this.formData['manager_id'] = this.$store.getters.token
-
+                this.formData['typesStr'] = this.formData.types.join(',')
                 let url = 'addcourse'
                 if (this.pageType === 'edit') url = 'updatecourse'
                 addcourse(this.formData, url).then(res => {
@@ -179,6 +198,7 @@ export default {
             const params = {}
             if (level) { params['id'] = node.value }
             let nodes = []
+            if (this.pageType === 'edit') this.boxLoading = true
             getIndustryType(params, url).then(res => {
                 nodes = res.data.map(item => {
                     if (level === 3) this.boxLoading = false
@@ -199,7 +219,6 @@ export default {
             if (this.formData.types.length) {
                 chapterlist({ types: this.formData.types }).then(res => {
                     const { data } = res
-                    console.log(res, 454545)
                     this.chapters = data
                 }).catch(() => {
                     this.chapters = []

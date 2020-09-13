@@ -2,72 +2,123 @@
   <div>
     <!--startprint-->
     <div class="print_box">
-      <div v-for="i in 3" :key="i" style="page-break-after:always">
-        <table class="ss">
-          <tbody>
-            <tr>
-              <th class="da" colspan="3">学时证明</th>
-            </tr>
-            <tr>
-              <th>姓名</th>
-              <th>2</th>
-              <th class="zp" rowspan="6">3</th>
-            </tr>
-            <tr>
-              <th class="left">身份证件类型</th>
-              <th>2</th>
-            </tr>
-            <tr>
-              <th class="left">身份证件号码</th>
-              <th>2</th>
-            </tr>
-            <tr>
-              <th class="left">人员资格类型</th>
-              <th>2</th>
-            </tr>
-            <tr>
-              <th class="left">安全培训机构</th>
-              <th>2</th>
-            </tr>
-            <tr>
-              <th class="left">安全培训日期</th>
-              <th>2</th>
-            </tr>
-            <tr>
-              <th colspan="3">
-                <table class="bottom" border="1">
-                  <tbody>
-                    <tr>
-                      <th>培训方式</th>
-                      <th>应修学时</th>
-                      <th>实修学时</th>
-                      <th>测试成绩</th>
-                    </tr>
-                    <tr>
-                      <th>网络</th>
-                      <th>2</th>
-                      <th>0</th>
-                      <th>97</th>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="qm fl">
-                  <div class="zhanwei" />
-                  <div>
-                    <div class="gz">单位：(盖章)</div>
-                    <div class="gz">日期</div>
+      <div v-for="i in 2" :key="i">
+        <div style="page-break-after:always">
+          <table class="ss">
+            <tbody>
+              <tr>
+                <th class="da" colspan="3">学时证明</th>
+              </tr>
+              <tr>
+                <th>姓名</th>
+                <th>2</th>
+                <th class="zp" rowspan="6">3</th>
+              </tr>
+              <tr>
+                <th class="left">身份证件类型</th>
+                <th>2</th>
+              </tr>
+              <tr>
+                <th class="left">身份证件号码</th>
+                <th>2</th>
+              </tr>
+              <tr>
+                <th class="left">人员资格类型</th>
+                <th>2</th>
+              </tr>
+              <tr>
+                <th class="left">安全培训机构</th>
+                <th>2</th>
+              </tr>
+              <tr>
+                <th class="left">安全培训日期</th>
+                <th>2</th>
+              </tr>
+              <tr>
+                <th colspan="3">
+                  <table class="bottom" border="1">
+                    <tbody>
+                      <tr>
+                        <th>培训方式</th>
+                        <th>应修学时</th>
+                        <th>实修学时</th>
+                        <th>测试成绩</th>
+                      </tr>
+                      <tr>
+                        <th>网络</th>
+                        <th>2</th>
+                        <th>0</th>
+                        <th>97</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="qm fl">
+                    <div class="zhanwei" />
+                    <div>
+                      <div class="gz">单位：(盖章)</div>
+                      <div class="gz">日期</div>
+                    </div>
                   </div>
-                </div>
-              </th>
-            </tr>
-          </tbody>
-        </table>
+                </th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div v-for="key in 3" :key="key" style="page-break-after:always">
+          <table class="ss" style="margin:30px auto;">
+            <tbody>
+              <tr>
+                <th class="da" style="height:100px;" colspan="16">学习详情</th>
+              </tr>
+              <tr>
+                <th colspan="3">姓名</th>
+                <th colspan="5">张三</th>
+                <th colspan="3">身份证号码</th>
+                <th colspan="5">610521121245212015</th>
+              </tr>
+              <tr>
+                <th colspan="3">人员资格类型</th>
+                <th colspan="9">放大机是考虑方法接口的放大机是考虑方法接口的放大机是考虑方法接口的放大机是考虑方法接口的</th>
+                <th colspan="2">培训类型</th>
+                <th colspan="2">网络</th>
+              </tr>
+              <tr>
+                <th colspan="10">章节名称</th>
+                <th colspan="2">讲师</th>
+                <th colspan="2">应修学时</th>
+                <th colspan="2">获得学时</th>
+              </tr>
+            </tbody>
+            <tbody>
+              <tr>
+                <th style="text-align:left;" colspan="10">第一章 绪论 放得开酸辣粉加两大飞机看电视了</th>
+                <th colspan="2" />
+                <th colspan="2">8</th>
+                <th colspan="2">8</th>
+              </tr>
+              <tr>
+                <th style="text-align:left;" colspan="10">基础知识</th>
+                <th colspan="2">张三</th>
+                <th colspan="2" />
+                <th colspan="2" />
+              </tr>
+              <tr>
+                <th colspan="4">应修总学</th>
+                <th colspan="4">16</th>
+                <th colspan="4">实学总学时</th>
+                <th colspan="4">2</th>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
     </div>
     <!--endprint-->
   </div>
 </template>
 <script>
+import { userdetails } from '@/api/student'
 export default {
     props: {
         // eslint-disable-next-line vue/require-default-prop
@@ -75,7 +126,7 @@ export default {
     },
     data() {
         return {
-            one: true
+            list: []
         }
     },
     created() {
@@ -83,13 +134,12 @@ export default {
     },
     methods: {
         init() {
-            // axios 请求
-            if (this.one) {
-                setTimeout(() => {
-                    this.Print()
-                    this.one = false
-                }, 2000)
-            }
+            userdetails({ id: this.$route.query.id }).then(res => {
+                console.log(res, 6666)
+                this.list = res.data
+            })
+
+            // this.Print()
         },
         // Print() {
         //     const newstr = document.getElementsByClassName('print_box')[0].innerHTML
@@ -103,10 +153,10 @@ export default {
         Print() { // 新页面
             const newstr = document.getElementsByClassName('print_box')[0].innerHTML
             window.document.body.innerHTML = newstr
-            // const oldstr = window.document.body.innerHTML
+            // // const oldstr = window.document.body.innerHTML
             window.print()
-            // window.location.reload() // 解决打印之后按钮失效的问题
-            // window.document.body.innerHTML = oldstr
+            // // window.location.reload() // 解决打印之后按钮失效的问题
+            // // window.document.body.innerHTML = oldstr
             return false
         }
     }
