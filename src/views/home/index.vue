@@ -72,7 +72,7 @@
 import tablePug from '@/components/table'
 import datas from '@/assets/json/data'
 import { getHome } from '@/api/home'
-import { selectclass } from '@/api/class'
+import { selectclass, updateclass, delclass } from '@/api/class'
 export default {
     name: 'Home',
     components: { tablePug },
@@ -132,20 +132,39 @@ export default {
         getPageData(params) {
             this.lists = datas.slice((params - 1) * 8, params * 8)
         },
-        getVal(v) {
-            console.log(v)
-
-            if (v.type === '结业') {
-                this.$message(`${v.type}---待处理`)
-                return
+        getVal({ type, data }) {
+            if (type === '结业') {
+                this.$confirm(`当前班级进度为${data.progress || 0}%?,是否确定结业`, '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    updateclass({ status: 2, id: data.id }).then(res => {
+                        this.$message.success('操作成功')
+                        this.init(this.searchData)
+                    })
+                }).catch(() => {
+                    this.$message.info('取消')
+                })
             }
-            if (v.type === '详情') {
+            if (type === '详情') {
                 this.$router.push('/class/recruitStudent/info?type=learning')
                 return
             }
-            if (v.type === '解散') {
-                this.$message(`${v.type}---待处理`)
-                return
+            if (type === '解散') {
+                if (data.classperson > 0) return this.$message.warning(`当前班级尚有${data.classperson}个学员，不可解散`)
+                this.$confirm('确认要解散当前班级?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    delclass({ id: data.id }).then(res => {
+                        this.$message.success(res.msg)
+                        this.init(this.searchData)
+                    })
+                }).catch(() => {
+                    this.$message.info('取消')
+                })
             }
         }
     }
