@@ -21,7 +21,7 @@
       </div>
       <div class="lookItem fl">
         <div>模拟考试次数</div>
-        <div>{{ user.mkcs }}</div>
+        <div>{{ user.count }}</div>
         <div>最高分数</div>
         <div>{{ user.max_score }}</div>
       </div>

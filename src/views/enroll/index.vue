@@ -11,8 +11,8 @@
       <div class="flsb">
         <div class="bold">报名列表</div>
         <div>
-          <el-button type="warning" size="mini" round class="cursor" @click="delAll">批量删除</el-button>
-          <el-button type="info" size="mini" round class="cursor" @click="btnsave">导出学员</el-button>
+          <!-- <el-button type="warning" size="mini" round class="cursor" @click="delAll">批量删除</el-button>
+          <el-button type="info" size="mini" round class="cursor" @click="btnsave">导出学员</el-button> -->
         </div>
       </div>
       <tablePug
@@ -41,7 +41,7 @@ import tablePug from '@/components/table'
 import page from '@/components/table/page'
 import search from './search'
 
-import { getStudents } from '@/api/student'
+import { baoming } from '@/api/student'
 export default {
     name: 'Student',
     components: { tablePug, search, page },
@@ -52,18 +52,18 @@ export default {
             titles: [
                 { name: '学员姓名', data: 'name' },
                 { name: '身份证号', data: 'idcard' },
-                { name: '手机号码', data: 'phonenum' },
+                { name: '手机号码', data: 'ipone' },
                 { name: '报名日期', data: 'active_time' },
                 { name: '工种', data: 'types' }
             ],
-            btn: {
-                title: '操作',
-                width: 140,
-                btnlist: [
-                    { con: '删除', type: 'warning' },
-                    { con: '下载附件', type: 'info' }
-                ]
-            },
+            // btn: {
+            //     title: '操作',
+            //     width: 140,
+            //     btnlist: [
+            //         { con: '删除', type: 'warning' },
+            //         // { con: '下载附件', type: 'info' }
+            //     ]
+            // },
             searchData: {// 搜索条件
                 manager_id: this.$store.getters.token,
                 size: 8,
@@ -81,10 +81,11 @@ export default {
         init() {
             this.tableloading = true
             const data = { ...this.searchData, ...this.queryData }
-            getStudents(data).then(res => {
+            baoming(data).then(res => {
+                console.log(res)
                 this.total = Number(res.data.count)
                 for (const item of res.data.list) {
-                    item.active_time = this.$parseTime(item.active_time, '{y}-{m}-{d}')
+                    item.active_time = this.$parseTime(item.addtime, '{y}-{m}-{d}')
                 }
                 this.lists = res.data.list
                 this.tableloading = false

@@ -21,3 +21,12 @@ export function userdetails(data) {
     })
 }
 
+//获取报名信息
+export function baoming(data) {
+    return request({
+        url: '/index.php/Master/User/baoming',
+        method: 'post',
+        data: qs.stringify(data)
+    })
+}
+
