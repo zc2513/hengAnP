@@ -83,7 +83,7 @@ export default {
     data() {
         return {
             uploadFile: `${process.env.VUE_APP_BASE_API}/index.php/Wechat/ImgUpload/imgUpload`, // 模板下载
-            exportFile: `${process.env.VUE_APP_BASE_API}/index.php/Wechat/ImgUpload/imgUpload`, // 导出学员
+            exportFile: `${process.env.VUE_APP_BASE_API}/index.php/Master/User/order?class_id=`+this.$route.query.id, // 导出学员
             total: 0, // 分页总数量
             lists: [], // 展示数据
             tableloading: false, // 表格加载

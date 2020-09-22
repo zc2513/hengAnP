@@ -53,8 +53,7 @@ export default {
                 { name: '学员姓名', data: 'name' },
                 { name: '身份证号', data: 'idcard' },
                 { name: '手机号码', data: 'ipone' },
-                { name: '报名日期', data: 'active_time' },
-                { name: '工种', data: 'types' }
+                { name: '报名日期', data: 'active_time' }
             ],
             // btn: {
             //     title: '操作',
