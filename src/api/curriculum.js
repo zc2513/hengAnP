@@ -1,16 +1,8 @@
 import request from '@/utils/request'
 import qs from 'qs'
 
-// $where['chapter_id'] = I('chapter_id ');
-// $where['video_id'] = I('video_id ');
-// $where['title'] = I('title ');
-// $where['content'] = I('content ');
-// $where['teacher'] = I('teacher ');
-// $where['hours'] = I('hours ');
-// $where['logo'] = I('logo ');
-// $where['url'] = I('url ');
 
-// 新增/编辑课程
+// 新增/编辑课程  
 export function addcourse(data, url) {
     return request({
         url: `/index.php/Master/Course/${url}`,
