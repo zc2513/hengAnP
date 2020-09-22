@@ -88,218 +88,218 @@
 </template>
 
 <script>
-import tablePug from "@/components/table";
-import page from "@/components/table/page";
-import studentInfo from "@/components/studentInfo";
-import { phoneValidate, IDcardValidate } from "@/utils/validate";
-import { getClasslist, delperson } from "@/api/class";
+import tablePug from '@/components/table'
+import page from '@/components/table/page'
+import studentInfo from '@/components/studentInfo'
+import { phoneValidate, IDcardValidate } from '@/utils/validate'
+import { getClasslist, delperson } from '@/api/class'
 export default {
-  name: "RecruitStudentInfo",
-  components: { tablePug, page, studentInfo },
-  data() {
-    return {
-      uploadFile: `${process.env.VUE_APP_BASE_API}/index.php/Wechat/ImgUpload/imgUpload`, // 模板下载
-      exportFile:
+    name: 'RecruitStudentInfo',
+    components: { tablePug, page, studentInfo },
+    data() {
+        return {
+            uploadFile: `${process.env.VUE_APP_BASE_API}/index.php/Wechat/ImgUpload/imgUpload`, // 模板下载
+            exportFile:
         `${process.env.VUE_APP_BASE_API}/index.php/Master/User/order?class_id=` +
         this.$route.query.id, // 导出学员
-      total: 0, // 分页总数量
-      lists: [], // 展示数据
-      tableloading: false, // 表格加载
-      searchData: {
-        // 搜索条件
-        size: 8,
-        page: 1,
-        // status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
-      },
-      titles: [
-        { name: "学员ID", data: "id" },
-        { name: "学员姓名", data: "name" },
-        { name: "工种", data: "types" },
-        { name: "身份证号", data: "idcard" },
-        { name: "手机号码", data: "phonenum" },
-        { name: "培训日期", data: "active_time" },
-        { name: "完成学时", data: "period" },
-      ],
-      btn: {
-        title: "操作",
-        width: "220",
-        btnlist: [
-          { con: "打印课时", type: "warning" },
-          { con: "查看", type: "primary" },
-          { con: "删除", type: "warning" },
-        ],
-      },
-      looks: {
-        status: false,
-        title: "",
-        datas: {},
-      },
-      searchstudent: {
-        // 搜索条件
-        name: "",
-        phonenum: "",
-        idcard: "",
-      },
-      student: {
-        // 提交条件
-        name: "",
-        phone: "",
-        card: "",
-      },
-      rules: {
-        name: [
-          { required: true, message: "学员姓名不能为空", trigger: "blur" },
-        ],
-        phone: [
-          { required: true, message: "联系电话不能为空", trigger: "blur" },
-          {
-            min: 11,
-            max: 11,
-            message: "电话长度应为11个字符",
-            trigger: "blur",
-          },
-          { validator: phoneValidate, trigger: "blur" },
-        ],
-        card: [
-          { required: true, message: "身份证号码不能为空", trigger: "blur" },
-          {
-            min: 15,
-            max: 18,
-            message: "身份证号码长度在 15 到 18 个字符",
-            trigger: "blur",
-          },
-          { validator: IDcardValidate, trigger: "blur" },
-        ],
-      },
-      studentId: 0, // 学员详情id
-    };
-  },
-  created() {
-    const pathType = this.$route.query.type;
-    if (pathType === "recruitStudent") {
-      this.titles = this.titles.filter((e) => e.name !== "完成学时");
-      this.$set(this.btn, "btnlist", [
-        { con: "查看", type: "primary" },
-        { con: "删除", type: "warning" },
-      ]);
-      this.$set(this.btn, "width", 120);
-      // this.searchData.status = 0
-    } else if (pathType === "learning") {
-      console.log("使用原始配置");
-      // this.searchData.status = 1
-    } else if (pathType === "finish") {
-      this.$set(this.btn, "width", 150);
-      this.$set(this.btn, "btnlist", [
-        { con: "打印课时", type: "warning" },
-        { con: "查看", type: "primary" },
-      ]);
-      // this.searchData.status = 2
-    } else {
-      // this.$router.push('/404')
+            total: 0, // 分页总数量
+            lists: [], // 展示数据
+            tableloading: false, // 表格加载
+            searchData: {
+                // 搜索条件
+                size: 8,
+                page: 1
+                // status: this.$route.path === '/class/recruitStudent' ? 0 : (this.$route.path === '/class/learn' ? 1 : 2)
+            },
+            titles: [
+                { name: '学员ID', data: 'id' },
+                { name: '学员姓名', data: 'name' },
+                { name: '工种', data: 'types' },
+                { name: '身份证号', data: 'idcard' },
+                { name: '手机号码', data: 'phonenum' },
+                { name: '培训日期', data: 'active_time' },
+                { name: '完成学时', data: 'period' }
+            ],
+            btn: {
+                title: '操作',
+                width: '220',
+                btnlist: [
+                    { con: '打印课时', type: 'warning' },
+                    { con: '查看', type: 'primary' },
+                    { con: '删除', type: 'warning' }
+                ]
+            },
+            looks: {
+                status: false,
+                title: '',
+                datas: {}
+            },
+            searchstudent: {
+                // 搜索条件
+                name: '',
+                phonenum: '',
+                idcard: ''
+            },
+            student: {
+                // 提交条件
+                name: '',
+                phone: '',
+                card: ''
+            },
+            rules: {
+                name: [
+                    { required: true, message: '学员姓名不能为空', trigger: 'blur' }
+                ],
+                phone: [
+                    { required: true, message: '联系电话不能为空', trigger: 'blur' },
+                    {
+                        min: 11,
+                        max: 11,
+                        message: '电话长度应为11个字符',
+                        trigger: 'blur'
+                    },
+                    { validator: phoneValidate, trigger: 'blur' }
+                ],
+                card: [
+                    { required: true, message: '身份证号码不能为空', trigger: 'blur' },
+                    {
+                        min: 15,
+                        max: 18,
+                        message: '身份证号码长度在 15 到 18 个字符',
+                        trigger: 'blur'
+                    },
+                    { validator: IDcardValidate, trigger: 'blur' }
+                ]
+            },
+            studentId: 0 // 学员详情id
+        }
+    },
+    created() {
+        const pathType = this.$route.query.type
+        if (pathType === 'recruitStudent') {
+            this.titles = this.titles.filter((e) => e.name !== '完成学时')
+            this.$set(this.btn, 'btnlist', [
+                { con: '查看', type: 'primary' },
+                { con: '删除', type: 'warning' }
+            ])
+            this.$set(this.btn, 'width', 120)
+            // this.searchData.status = 0
+        } else if (pathType === 'learning') {
+            console.log('使用原始配置')
+            // this.searchData.status = 1
+        } else if (pathType === 'finish') {
+            this.$set(this.btn, 'width', 150)
+            this.$set(this.btn, 'btnlist', [
+                { con: '打印课时', type: 'warning' },
+                { con: '查看', type: 'primary' }
+            ])
+            // this.searchData.status = 2
+        } else {
+            // this.$router.push('/404')
+        }
+        this.init()
+    },
+    methods: {
+        init() {
+            this.tableloading = true
+            const data = {
+                class_id: this.$route.query.id,
+                ...this.searchData,
+                ...this.searchstudent
+            }
+            getClasslist(data)
+                .then((res) => {
+                    this.total = Number(res.data.count)
+                    for (const item of res.data.list) {
+                        item.active_time = this.$parseTime(item.active_time, '{y}-{m}-{d}')
+                    }
+                    this.lists = res.data.list
+                    this.tableloading = false
+                })
+                .catch(() => {
+                    this.tableloading = false
+                })
+        },
+        btnsave(e) {
+            this.$message(e.target.innerText)
+        },
+        getBtn({ type, data }) {
+            if (type === '查看') {
+                this.studentId = data.id || 90075
+                this.looks = {
+                    status: true,
+                    title: '详情'
+                }
+                return
+            }
+            if (type === '删除') {
+                this.$confirm('是否在当前班级删除该学员?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                })
+                    .then(() => {
+                        delperson({ id: data.id }).then((res) => {
+                            this.$message.success(res.msg)
+                            this.init()
+                        })
+                    })
+                    .catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })
+                    })
+                return
+            }
+            if (type === '打印课时') {
+                const routeData = this.$router.resolve({
+                    path: '/dayin',
+                    query: { id: data.id }
+                })
+                window.open(routeData.href, '_blank')
+            }
+        },
+        querySearch() {
+            this.init()
+        },
+        onSubmit() {
+            console.log('提交', this.student)
+        },
+        getPageData(params) {
+            // 页
+            this.searchData.page = params
+            this.init()
+        },
+        pagesizes(num) {
+            // 每页多少个并重置page为1
+            this.searchData.size = num
+            this.searchData.page = 1
+            this.init()
+        },
+        addStudent(e) {
+            // 添加学员
+            this.student = {
+                // 重置提交条件
+                name: '',
+                phone: '',
+                card: ''
+            }
+            this.looks = {
+                status: true,
+                title: e.target.innerText,
+                datas: {}
+            }
+        },
+        morePrint() {
+            const routeData = this.$router.resolve({
+                path: '/dayin',
+                query: { id: 1 }
+            })
+            window.open(routeData.href, '_blank')
+        }
     }
-    this.init();
-  },
-  methods: {
-    init() {
-      this.tableloading = true;
-      const data = {
-        class_id: this.$route.query.id,
-        ...this.searchData,
-        ...this.searchstudent,
-      };
-      getClasslist(data)
-        .then((res) => {
-          this.total = Number(res.data.count);
-          for (const item of res.data.list) {
-            item.active_time = this.$parseTime(item.active_time, "{y}-{m}-{d}");
-          }
-          this.lists = res.data.list;
-          this.tableloading = false;
-        })
-        .catch(() => {
-          this.tableloading = false;
-        });
-    },
-    btnsave(e) {
-      this.$message(e.target.innerText);
-    },
-    getBtn({ type, data }) {
-      if (type === "查看") {
-        this.studentId = data.id || 90075;
-        this.looks = {
-          status: true,
-          title: "详情",
-        };
-        return;
-      }
-      if (type === "删除") {
-        this.$confirm("是否在当前班级删除该学员?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            delperson({ id: data.id }).then((res) => {
-              this.$message.success(res.msg);
-              this.init();
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消删除",
-            });
-          });
-        return;
-      }
-      if (type === "打印课时") {
-        const routeData = this.$router.resolve({
-          path: "/dayin",
-          query: { id: data.id },
-        });
-        window.open(routeData.href, "_blank");
-      }
-    },
-    querySearch() {
-      this.init();
-    },
-    onSubmit() {
-      console.log("提交", this.student);
-    },
-    getPageData(params) {
-      // 页
-      this.searchData.page = params;
-      this.init();
-    },
-    pagesizes(num) {
-      // 每页多少个并重置page为1
-      this.searchData.size = num;
-      this.searchData.page = 1;
-      this.init();
-    },
-    addStudent(e) {
-      // 添加学员
-      this.student = {
-        // 重置提交条件
-        name: "",
-        phone: "",
-        card: "",
-      };
-      this.looks = {
-        status: true,
-        title: e.target.innerText,
-        datas: {},
-      };
-    },
-    morePrint() {
-      const routeData = this.$router.resolve({
-        path: "/dayin",
-        query: { id: 1 },
-      });
-      window.open(routeData.href, "_blank");
-    },
-  },
-};
+}
 </script>
 <style lang="scss" scoped>
 .recruitStudentInfo {
