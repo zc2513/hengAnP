@@ -56,11 +56,12 @@ export default {
             this.$message(e.target.innerText)
         },
         getBtn(v) {
+            console.log(v)
             if (v.type === '详情') {
                 this.$router.push('/class/recruitStudent/info?type=finish')
             }
             if (v.type === '打印课时') {
-                const routeData = this.$router.resolve({ path: '/dayin', query: { class_id: v.data.classid }})
+                const routeData = this.$router.resolve({ path: '/dayin', query: { class_id: v.data.id }})
                 window.open(routeData.href, '_blank')
             }
         }

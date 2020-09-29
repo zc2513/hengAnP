@@ -55,7 +55,7 @@ export default {
             total: 0,
             lists: [],
             titles: [
-                { name: '班级ID', data: 'class_id' },
+                { name: '班级名称', data: 'classname' },
                 { name: '学员姓名', data: 'name' },
                 { name: '工种', data: 'types' },
                 { name: '身份证号', data: 'idcard' },
