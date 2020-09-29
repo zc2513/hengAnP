@@ -123,6 +123,7 @@
         </el-row>
         <div class="mt20">
           <div class="bold">已选课时（{{ chapters.length }}）</div>
+          <div class="bold">已选课时（{{ formData.classhour }}）</div>
           <div class="table-list">
             <el-table
               ref="refTable"
@@ -245,7 +246,8 @@ export default {
                 endclass: '', // 结束时间
                 course: [], // 已选课程
                 type5_id: '初训',
-                type6_id: ''
+                type6_id: '',
+                classhour: 0
             },
             rules: {
                 classname: [
@@ -306,7 +308,7 @@ export default {
                     label: '新疆维吾尔自治区'
                 }],
             chapters: [], // 章节列表
-            noArr: [], // 选中列表--只临时用于信息回显
+            noArr: [], // 选中列表--只临时用于信息回显--用于回显
             boxLoading: false
         }
     },
@@ -396,8 +398,16 @@ export default {
         },
 
         handleSelectionChange(row) { // 多选，选中数据，处理
-            const arr = row.map(e => e.id)
-            this.formData.course = arr.length ? arr.join(',') : ''
+            if (row.length) {
+                const arr = row.map(e => e.id)
+                this.formData.classhour = row.map(e => Number(e.hours)).reduce((prev, curr) => {
+                    return prev + curr
+                })
+                this.formData.course = arr.join(',')
+            } else {
+                this.formData.classhour = 0
+                this.formData.course = ''
+            }
         },
         changeDate(time) { // 时间选择器
             this.formData.startclass = time ? time[0] : ''

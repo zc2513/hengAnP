@@ -1,8 +1,7 @@
 import request from '@/utils/request'
 import qs from 'qs'
 
-
-// 新增/编辑课程  
+// 新增/编辑课程
 export function addcourse(data, url) {
     return request({
         url: `/index.php/Master/Course/${url}`,
