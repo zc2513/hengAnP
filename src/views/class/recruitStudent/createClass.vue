@@ -122,7 +122,6 @@
           </el-col>
         </el-row>
         <div class="mt20">
-          <div class="bold">已选课时（{{ chapters.length }}）</div>
           <div class="bold">已选课时（{{ formData.classhour }}）</div>
           <div class="table-list">
             <el-table
